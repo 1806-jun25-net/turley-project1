@@ -25,5 +25,10 @@ namespace PizzaPlanet.Library
         /// Last order placed, to prevent multiple orders from same location within 2 hours
         /// </summary>
         public Order LastOrder { get; set; }
+
+        public User(string name)
+        {
+            Name = name;
+        }
     }
 }

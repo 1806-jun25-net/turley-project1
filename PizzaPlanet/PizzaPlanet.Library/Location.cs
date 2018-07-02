@@ -6,6 +6,35 @@ namespace PizzaPlanet.Library
 {
     public class Location
     {
+        private static Dictionary<int,Location> LocationsReal = null;
+        
+        public static Dictionary<int,Location> Locations()
+        {
+            if (LocationsReal == null)
+                FillLocations();
+            return LocationsReal;
+        }
+        public static Location GetLocation(int id)
+        {
+            foreach(int i in LocationsReal.Keys)
+            {
+                if (i == id)
+                    return LocationsReal[id]; 
+            }
+            return null;
+        }
+        //public static Location GetLocation(int num)
+        //{
+        //    return LocationsReal[num];
+        //}
+        private static void FillLocations()
+        {
+            LocationsReal = new Dictionary<int,Location>();
+            LocationsReal.Add(101,new Location(101));
+            LocationsReal.Add(723,new Location(723));
+            LocationsReal.Add(988,new Location(988));
+        }
+
 
         /*  Inventory Notes: 1 amount = 1 Small pizza worth, for each type
             Medium = 1.5, large = 2
@@ -37,14 +66,21 @@ namespace PizzaPlanet.Library
         /// Money store has earned since 'creation'
         /// </summary>
         private double Income { get; set; } = 0;
-
-        public int Id { get; set; }
+        /// <summary>
+        /// Id number for store (store number) as a 3 digit number
+        /// </summary>
+        public readonly int Id;
 
         /// <summary>
-        /// Creates new Location with given Id (Store Number)
+        /// Creates new Location with given Id (Store Number) and 
         /// </summary>
-        /// <param name="Id"></param>
-        public Location(int Id) { }
+        /// <param name="i"></param>
+        public Location(int i)
+        {
+            if (i < 100 || i > 999)
+                throw new Exception("Input out of range, store number must be 3 digits");
+            Id = i;
+        }
 
         /// <summary>
         /// Adds the given order to the order history, and subtracts ingredients from inventory
