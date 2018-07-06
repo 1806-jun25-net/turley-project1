@@ -10,7 +10,7 @@ namespace PizzaPlanet.Library
         public enum CrustType { Hand_Tossed, Pan, Thin }
         public enum ToppingType { Sauce, Cheese, Pepperoni, Sausage, Ham, Bacon, Beef, Onion, Green_Pepper, Mushroom, Black_Olive }
         public enum SizeType { Small=2, Medium, Large}
-        public enum Amount { None, Light, Regular, Extra}
+        public enum Amount { No, Light, Regular, Extra}
 
         public static string[] Sizes = Enum.GetNames(typeof(SizeType));
         public static string[] CrustTypes = Enum.GetNames(typeof(CrustType));
@@ -98,7 +98,7 @@ namespace PizzaPlanet.Library
         /// <param name="topping"></param>
         public void RemoveTopping(ToppingType topping)
         {
-            Toppings[(int)topping] = Amount.None;
+            Toppings[(int)topping] = Amount.No;
         }
 
         /// <summary>
@@ -107,7 +107,6 @@ namespace PizzaPlanet.Library
         /// <returns></returns>
         public int ToInt()
         {
-            //TODO
             int p = 0;
             p += (int)Size-2;
             p += (int)Crust * 2 ^ 2;
@@ -115,6 +114,35 @@ namespace PizzaPlanet.Library
                 p += (int)Toppings[i] * 2 ^ (i + 4);
             return p;
         }
+
+        public override string ToString()
+        {
+            string s = "";
+            s += Size.ToString();
+            s += " " + Crust.ToString();
+            if (Toppings[(int)ToppingType.Sauce] != Amount.Regular)
+                s += ", " + Toppings[(int)ToppingType.Sauce].ToString() + " Sauce";
+            bool cheese = true;
+            if (Toppings[(int)ToppingType.Cheese] != Amount.Regular)
+            {
+                s += ", " + Toppings[(int)ToppingType.Cheese].ToString() + " Cheese";
+                cheese = false;
+            }
+            for (int i = (int)ToppingType.Pepperoni;i<Toppings.Length;i++)
+            {
+                if (Toppings[i] != Amount.No)
+                {
+                    cheese = false;
+                    s += ", " + ToppingTypes[i];
+                    if (Toppings[i] != Amount.Regular)
+                        s += " (" + Toppings[i].ToString() + ")";
+                }
+            }
+            if (cheese)
+                s += " Cheese";
+            return s;
+        }
+
 
         /// <summary>
         /// Price of the pizza, calculated based on size/toppings. No Tax
@@ -160,8 +188,14 @@ namespace PizzaPlanet.Library
             }
             return Math.Round(price,2);
         }
-        
 
+        public override bool Equals(object obj)
+        {
+            if (obj.GetType() == typeof(Pizza))
+                return ((Pizza)obj).ToInt() == this.ToInt();
+            else
+                return false;
+        }
 
     }
 }

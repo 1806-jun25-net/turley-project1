@@ -111,15 +111,17 @@ namespace PizzaPlanet.Library
                 if (toppings[i] > Toppings[i])
                     return false;
             }
-            
+
             //If yes, adds order to list and decreases inventory
+            //Actually places the order
+            o.Time = DateTime.Now;
             o.Id = NextOrder++;
+            o.Customer.LastOrder = o;
             Orders.Add(NextOrder++, o);
             Dough -= dough;
             for (int i = 0; i < toppings.Length; i++)
                 Toppings[i] -= toppings[i];
             Income += o.Price();
-
             return true;
         }
 

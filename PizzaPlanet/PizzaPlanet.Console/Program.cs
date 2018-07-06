@@ -8,7 +8,6 @@ namespace PizzaPlanet.Application
         {
             //start console app
             Console.StartScreen();
-            System.Console.ReadLine();
         }
     }
 }

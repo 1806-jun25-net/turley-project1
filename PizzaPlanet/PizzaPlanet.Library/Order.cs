@@ -26,10 +26,17 @@ namespace PizzaPlanet.Library
         /// </summary>
         public DateTime Time { get; set; }
 
+        
+        public static readonly int MaxPizzas = 12;
         /// <summary>
         /// Pizzas included in the order
         /// </summary>
-        public List<Pizza> Pizzas { get; }
+        public Pizza[] Pizzas { get; }
+
+        /// <summary>
+        /// Current Number of pizzas in the order
+        /// </summary>
+        public int NumPizza { get; private set; }
 
         /// <summary>
         /// Singular constructor for Order. Pizzas must be added after
@@ -40,8 +47,9 @@ namespace PizzaPlanet.Library
         {
             Store = store;
             Customer = customer;
-            Time = DateTime.Now;
-            Pizzas = new List<Pizza>();
+            Time = DateTime.MinValue;
+            NumPizza = 0;
+            Pizzas = new Pizza[MaxPizzas];
         }
 
         /// <summary>
@@ -51,20 +59,70 @@ namespace PizzaPlanet.Library
         public bool AddPizza(Pizza p)
         {
             //possible todo: add cause of failure to false
-            if (Pizzas.Count >= 12 || (Price() + p.Price()) > 500)
+            if (NumPizza == MaxPizzas || (Price() + p.Price()) > MaxPrice)
                 return false;
-            Pizzas.Add(p);
+            Pizzas[NumPizza] = p;
+            NumPizza++;
             return true;
         }
-                
 
+        public bool RemovePizza(int p)
+        {
+            //possible todo, better restriction/permissions here
+            if (Pizzas[p] == null)
+                return false;
+            for(int i = p + 1; i < NumPizza; i++)
+                Pizzas[i - 1] = Pizzas[i];
+            NumPizza--;
+            Pizzas[NumPizza] = null;
+            return true;
+        }
+
+        /// <summary>
+        /// Maximum Price allowed for an order
+        /// </summary>
+        public static readonly double MaxPrice = 500.0;
+
+        /// <summary>
+        /// Calculates the current total price of the order
+        /// </summary>
+        /// <returns></returns>
         public double Price()
         {
             //possible todo: change calculation to "as-we-go"
             double totalPrice = 0.0;
-            foreach (Pizza p in Pizzas)
-                totalPrice += p.Price();
+            for(int i =0;i<NumPizza;i++)
+                totalPrice += Pizzas[i].Price();
             return totalPrice;
         }
+
+        /// <summary>
+        /// Places the order. Returns whether it was successful
+        /// </summary>
+        /// <returns></returns>
+        public bool Place()
+        {
+            return Store.PlaceOrder(this);
+        }
+
+        /// <summary>
+        /// String representation of order, for display to console
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            string s = "";
+            s += "Store: " + Store.Id;
+            for(int i = 0; i < NumPizza; i++)
+                s += "\r\n" + Pizzas[i].ToString();
+            s += "\r\nTotal Price: " + Price();
+            return s;
+        }
+
+        public bool CanAddPizza()
+        {
+            return NumPizza < 12 && Price() < 500;
+        }
+        
     }
 }
