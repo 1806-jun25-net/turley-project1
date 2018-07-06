@@ -7,7 +7,7 @@ namespace PizzaPlanet.Application
         static void Main(string[] args)
         {
             //start console app
-            PizzaPlanet.Application.Console.StartScreen();
+            Console.StartScreen();
             System.Console.ReadLine();
         }
     }

@@ -63,6 +63,26 @@ namespace PizzaPlanet.Library
             Toppings[(int)ToppingType.Sauce] = sauce;
         }
         /// <summary>
+        /// Creates a pizza object from stored code
+        /// </summary>
+        /// <param name="code"></param>
+        public Pizza (int code)
+        {
+            int c = code;
+            Size = (SizeType)((c % 4)+2);
+            c /= 4;
+            Crust = (CrustType)(c % 4);
+            c /= 4;
+            Toppings = new Amount[ToppingTypes.Length]; 
+            for(int i = 0;i<Toppings.Length; i++)
+            {
+                if (c == 0) { break; }
+                Toppings[i] = (Amount)(c % 4);
+                c /= 4;
+            }
+        }
+
+        /// <summary>
         /// Adds topping to pizza. Regular amount unless modified
         /// </summary>
         /// <param name="topping"></param>
@@ -82,12 +102,26 @@ namespace PizzaPlanet.Library
         }
 
         /// <summary>
+        /// Transorms pizza into int for storage
+        /// </summary>
+        /// <returns></returns>
+        public int ToInt()
+        {
+            //TODO
+            int p = 0;
+            p += (int)Size-2;
+            p += (int)Crust * 2 ^ 2;
+            for (int i = 0; i < Toppings.Length; i++)
+                p += (int)Toppings[i] * 2 ^ (i + 4);
+            return p;
+        }
+
+        /// <summary>
         /// Price of the pizza, calculated based on size/toppings. No Tax
         /// </summary>
         public double Price()
         {
             //possible todo: change calculation to "as-we-go"
-            
             //Note base prices used here. Should be made static defaults if displayed to user.
 
             double price = 0.0;
