@@ -12,7 +12,7 @@ namespace PizzaPlanet.Library
         public Location Store { get; set; }
 
         /// <summary>
-        /// Order number
+        /// Order number with the store. -1 if unplaced
         /// </summary>
         public int Id { get; set; }
 
@@ -26,7 +26,9 @@ namespace PizzaPlanet.Library
         /// </summary>
         public DateTime Time { get; set; }
 
-        
+        /// <summary>
+        /// Max number of pizzas allowed in an order
+        /// </summary>
         public static readonly int MaxPizzas = 12;
         /// <summary>
         /// Pizzas included in the order
@@ -50,6 +52,7 @@ namespace PizzaPlanet.Library
             Time = DateTime.MinValue;
             NumPizza = 0;
             Pizzas = new Pizza[MaxPizzas];
+            Id = -1;//denotes the order has not been placed
         }
 
         /// <summary>
@@ -97,15 +100,6 @@ namespace PizzaPlanet.Library
         }
 
         /// <summary>
-        /// Places the order. Returns whether it was successful
-        /// </summary>
-        /// <returns></returns>
-        public bool Place()
-        {
-            return Store.PlaceOrder(this);
-        }
-
-        /// <summary>
         /// String representation of order, for display to console
         /// </summary>
         /// <returns></returns>
@@ -122,6 +116,12 @@ namespace PizzaPlanet.Library
         public bool CanAddPizza()
         {
             return NumPizza < 12 && Price() < 500;
+        }
+
+        public static Order GetLastOrder(int userId)
+        {
+            //TODO
+            return null;
         }
         
     }

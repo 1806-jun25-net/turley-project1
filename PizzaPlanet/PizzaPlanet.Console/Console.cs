@@ -14,7 +14,7 @@ namespace PizzaPlanet.Application
 
         public static readonly char esc = (char)27;
 
-        private static User CurrentUser = new User("");
+        private static User CurrentUser = new User(-1,"");
         //Set to null to denote no location has been selected yet
         private static Location CurrentLocation = null;
 
@@ -35,7 +35,7 @@ namespace PizzaPlanet.Application
             System.Console.WriteLine("Username not found, create new?");
             System.Console.ReadLine();
             System.Console.WriteLine("Welcome, " + userInput);
-            CurrentUser = new User(userInput);
+            CurrentUser = new User(0,userInput);
             WhatNextScreen();
             return;
         }

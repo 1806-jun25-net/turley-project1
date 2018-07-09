@@ -7,28 +7,58 @@ namespace PizzaPlanet.Library
     public class User
     {
         /// <summary>
-        /// Name of the user in string form
+        /// Id number associated with the user
         /// </summary>
-        public string Name { get; set; }
+        public int Id { get; }
         
         /// <summary>
-        /// Favorite order, suggested to user when placing new order
+        /// Name of the user in string form
         /// </summary>
-        public Order Favorite { get; set; }
+        public string Name { get; }
 
         /// <summary>
-        /// User's chosen Default Location for ordering
+        /// User's chosen Default Location for ordering. Null until set
         /// </summary>
-        public Location DefaultLocation { get; set; }
+        public Location DefLocation { get; set; }
 
         /// <summary>
         /// Last order placed, to prevent multiple orders from same location within 2 hours
         /// </summary>
-        public Order LastOrder { get; set; }
+        private Order LastOrder;
 
-        public User(string name)
+        public User(int id, string name)
         {
+            Id = id;
             Name = name;
+            DefLocation = null;
+            LastOrder = null;
         }
+
+        /// <summary>
+        /// Most recent order. Null if user has never placed an order
+        /// </summary>
+        /// <returns></returns>
+        public Order GetLastOrder()
+        {
+            if (LastOrder == null)
+                LastOrder = Order.GetLastOrder(Id);
+            return LastOrder;
+        }
+        /// <summary>
+        /// Sets Most recent order
+        /// </summary>
+        /// <param name="order"></param>
+        public void SetLastOrder(Order order)
+        {
+            LastOrder = order;
+        }
+
+        public override bool Equals(Object user)
+        {
+            if(user.GetType() == typeof(User))
+                return ((User)user).Id == this.Id;
+            return false;
+        }
+        
     }
 }

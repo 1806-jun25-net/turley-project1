@@ -90,6 +90,7 @@ namespace PizzaPlanet.Library
         public bool PlaceOrder(Order o)
         {
             //Possible todo: return failing ingredient rather than false
+            //Possible todo: change "check" to its own method
 
             //Calculates total dough, toppings required for order
             double dough = 0;
@@ -113,11 +114,11 @@ namespace PizzaPlanet.Library
             }
 
             //If yes, adds order to list and decreases inventory
-            //Actually places the order
+            //Places the order
             o.Time = DateTime.Now;
+            o.Customer.SetLastOrder(o);
             o.Id = NextOrder++;
-            o.Customer.LastOrder = o;
-            Orders.Add(NextOrder++, o);
+            Orders.Add(o.Id, o);
             Dough -= dough;
             for (int i = 0; i < toppings.Length; i++)
                 Toppings[i] -= toppings[i];
