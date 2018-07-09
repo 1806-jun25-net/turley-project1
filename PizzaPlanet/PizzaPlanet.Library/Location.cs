@@ -11,23 +11,21 @@ namespace PizzaPlanet.Library
         public static Dictionary<int,Location> Locations()
         {
             if (LocationsReal == null)
-                FillLocations();
+                LoadLocations();
             return LocationsReal;
         }
         public static Location GetLocation(int id)
         {
-            foreach(int i in LocationsReal.Keys)
+            foreach(int i in Locations().Keys)
             {
                 if (i == id)
-                    return LocationsReal[id]; 
+                    return Locations()[id]; 
             }
             return null;
         }
-        //public static Location GetLocation(int num)
-        //{
-        //    return LocationsReal[num];
-        //}
-        private static void FillLocations()
+
+
+        public static void LoadLocations()
         {
             LocationsReal = new Dictionary<int,Location>();
             LocationsReal.Add(101,new Location(101));
@@ -75,11 +73,11 @@ namespace PizzaPlanet.Library
         /// Creates new Location with given Id (Store Number) and 
         /// </summary>
         /// <param name="i"></param>
-        public Location(int i)
+        public Location(int id)
         {
-            if (i < 100 || i > 999)
+            if (id < 100 || id > 999)
                 throw new Exception("Input out of range, store number must be 3 digits");
-            Id = i;
+            Id = id;
         }
 
         /// <summary>
@@ -95,12 +93,12 @@ namespace PizzaPlanet.Library
             //Calculates total dough, toppings required for order
             double dough = 0;
             double[] toppings = new double[Toppings.Length]; 
-            foreach(Pizza p in o.Pizzas)
+            for(int i = 0;i<o.NumPizza;i++)
             {
-                double s = Pizza.SizeTypeToD(p.Size);
+                double s = Pizza.SizeTypeToD(o.Pizzas[i].Size);
                 dough += s;
-                for(int i = 0; i < toppings.Length;i++)
-                    toppings[i] += s*Pizza.AmountToD(p.Toppings[i]);
+                for(int j = 0; j < toppings.Length;j++)
+                    toppings[j] += s*Pizza.AmountToD(o.Pizzas[i].Toppings[j]);
             }
 
             //Check if required dough, toppings exist in store

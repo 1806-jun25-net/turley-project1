@@ -6,13 +6,32 @@ namespace PizzaPlanet.Library
 {
     public class User
     {
+
+        private static Dictionary<string, User> Users = new Dictionary<string, User>();
+
+        //old xml version 
+        public static void LoadUsers()
+        {
+            //TODO
+        }
+
+        public static User TryUser(string name)
+        {
+            if (Users.ContainsKey(name))
+                return Users[name];
+            return null;
+        }
+
+        public static User MakeUser(string name)
+        {
+            User ret = TryUser(name);
+            if (ret == null)
+                ret = new User(name);
+            return ret;
+        }
+
         /// <summary>
-        /// Id number associated with the user
-        /// </summary>
-        public int Id { get; }
-        
-        /// <summary>
-        /// Name of the user in string form
+        /// Name of the user in string form. Minimum 4 characters
         /// </summary>
         public string Name { get; }
 
@@ -26,12 +45,14 @@ namespace PizzaPlanet.Library
         /// </summary>
         private Order LastOrder;
 
-        public User(int id, string name)
+        public User(string name)
         {
-            Id = id;
+            if (name.Length < 4)
+                throw new ArgumentOutOfRangeException("Username too short.");
             Name = name;
             DefLocation = null;
             LastOrder = null;
+            Users.Add(name, this);
         }
 
         /// <summary>
@@ -41,7 +62,7 @@ namespace PizzaPlanet.Library
         public Order GetLastOrder()
         {
             if (LastOrder == null)
-                LastOrder = Order.GetLastOrder(Id);
+                LastOrder = Order.GetLastOrder(Name);
             return LastOrder;
         }
         /// <summary>
@@ -51,13 +72,6 @@ namespace PizzaPlanet.Library
         public void SetLastOrder(Order order)
         {
             LastOrder = order;
-        }
-
-        public override bool Equals(Object user)
-        {
-            if(user.GetType() == typeof(User))
-                return ((User)user).Id == this.Id;
-            return false;
         }
         
     }

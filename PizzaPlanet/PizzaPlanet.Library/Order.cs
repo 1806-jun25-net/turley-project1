@@ -118,7 +118,7 @@ namespace PizzaPlanet.Library
             return NumPizza < 12 && Price() < 500;
         }
 
-        public static Order GetLastOrder(int userId)
+        public static Order GetLastOrder(string userName)
         {
             //TODO
             return null;
