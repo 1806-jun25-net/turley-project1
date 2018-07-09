@@ -24,8 +24,7 @@ namespace PizzaPlanet.DBData
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=tcp:turley-1806.database.windows.net,1433;Initial Catalog=Project1-PizzaPlanet;Persist Security Info=False;User ID=turley;Password=Password123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                //JSON
             }
         }
 
