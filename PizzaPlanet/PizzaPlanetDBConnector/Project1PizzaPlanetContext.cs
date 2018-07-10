@@ -35,7 +35,7 @@ namespace PizzaPlanet.DBData
 
                 entity.Property(e => e.OrderId)
                     .HasColumnName("OrderID")
-                    .HasColumnType("decimal(18, 0)");
+                    .HasColumnType("decimal(10, 3)");
 
                 entity.Property(e => e.Quantity).HasDefaultValueSql("((1))");
 
@@ -50,7 +50,7 @@ namespace PizzaPlanet.DBData
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasColumnType("decimal(18, 0)");
+                    .HasColumnType("decimal(10, 3)");
 
                 entity.Property(e => e.StoreId).HasColumnName("StoreID");
 

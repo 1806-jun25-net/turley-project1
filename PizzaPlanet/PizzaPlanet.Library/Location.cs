@@ -40,8 +40,11 @@ namespace PizzaPlanet.Library
         /// <summary>
         /// One month worth of supplies
         /// </summary>
-        private static readonly decimal full = 2500.0M;
-        private void FullInventory()
+        public static readonly decimal full = 2500.0M;
+        /// <summary>
+        /// Sets inventory to full. used for testing and database setup
+        /// </summary>
+        public void FullInventory()
         {
             Dough = full;
             for(int i = 0; i < Toppings.Length; i++)

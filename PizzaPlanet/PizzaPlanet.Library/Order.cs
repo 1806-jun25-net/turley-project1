@@ -132,7 +132,7 @@ namespace PizzaPlanet.Library
         /// full version of id, which includes store number as a decimal
         /// </summary>
         /// <returns></returns>
-        internal decimal IdFull()
+        public decimal IdFull()
         {
             decimal ret = (decimal)Store.Id;
             ret = ret / 1000.0M;
@@ -142,7 +142,7 @@ namespace PizzaPlanet.Library
 
         public bool CanAddPizza()
         {
-            return NumPizza < 12 && Price() < 500;
+            return NumPizza < MaxPizzas && Price() < MaxPrice;
         }
 
         public static Order GetLastOrder(string userName)
