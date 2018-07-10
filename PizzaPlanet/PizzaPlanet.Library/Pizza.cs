@@ -108,10 +108,10 @@ namespace PizzaPlanet.Library
         public int ToInt()
         {
             int p = 0;
-            p += (int)Size-2;
-            p += (int)Crust * 2 ^ 2;
+            p += ((int)Size-2);
+            p += (int)Crust * 4;
             for (int i = 0; i < Toppings.Length; i++)
-                p += (int)Toppings[i] * 2 ^ (i + 4);
+                p += (int)Toppings[i] * (int)Math.Pow(2,(2*i + 4));
             return p;
         }
 
