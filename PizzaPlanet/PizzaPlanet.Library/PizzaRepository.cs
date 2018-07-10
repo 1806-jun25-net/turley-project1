@@ -101,6 +101,25 @@ namespace PizzaPlanet.Library
             _db.Store.Update(Mapper.Map(o.Store));
             Save();
         }
+        /// <summary>
+        /// All orders placed by User with name, ordered by newest first
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IEnumerable<Order> GetOrders(string name)
+        {
+            return Mapper.Map(_db.PizzaOrder.Where(o => (o.Username == name)).ToList().OrderBy(o => o.OrderTime).Reverse());
+        }
+
+        /// <summary>
+        /// All orders placed at Store with given Id, ordered with newest first
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <returns></returns>
+        public IEnumerable<Order> GetOrders(int storeId)
+        {
+            return Mapper.Map(_db.PizzaOrder.Where(o => (o.StoreId == storeId)).ToList().OrderBy(o=>o.OrderTime).Reverse());
+        }
 
         /// <summary>
         /// Persist changes to the data source.

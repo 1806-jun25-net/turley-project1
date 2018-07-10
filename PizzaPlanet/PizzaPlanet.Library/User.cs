@@ -73,13 +73,23 @@ namespace PizzaPlanet.Library
         /// <summary>
         /// User's chosen Default Location for ordering. Null until set
         /// </summary>
-        public Location DefLocation { get; }
+        public Location DefLocation { get; set; }
 
         /// <summary>
-        /// Last order placed, to prevent multiple orders from same location within 2 hours
-        /// TODO
+        /// User's Orders, sorted by time placed (newest first)
         /// </summary>
-        private Order LastOrder;
+        private IEnumerable<Order> OrdersReal;
+        
+        /// <summary>
+        /// User's Orders, sorted by time placed (newest first)
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Order> Orders()
+        {
+            if (OrdersReal == null)
+                OrdersReal = PizzaRepository.Repo().GetOrders(Name);
+            return OrdersReal;
+        }
 
         public User(string name)
         {
@@ -87,7 +97,7 @@ namespace PizzaPlanet.Library
                 throw new ArgumentOutOfRangeException("Username too short.");
             Name = name;
             DefLocation = null;
-            LastOrder = null;
+            OrdersReal = null;
         }
 
         public User(string name, Location defLocation) : this(name)
@@ -100,20 +110,24 @@ namespace PizzaPlanet.Library
         /// Most recent order. Null if user has never placed an order
         /// </summary>
         /// <returns></returns>
-        public Order GetLastOrder()
+        public Order LastOrder()
         {
-            if (LastOrder == null)
-                LastOrder = Order.GetLastOrder(Name);
-            return LastOrder;
+            var orders = Orders();
+            if (orders == null || orders.Count() == 0)
+                return null;
+            else return Orders().First();
         }
+
         /// <summary>
-        /// Sets Most recent order
+        /// adds the given order to 
         /// </summary>
-        /// <param name="order"></param>
-        public void SetLastOrder(Order order)
+        /// <param name="o"></param>
+        public void AddOrder(Order order)
         {
-            LastOrder = order;
+            if (OrdersReal == null)
+                Orders();
+            OrdersReal = OrdersReal.Concat(new[] { order });
+            OrdersReal.OrderBy(o => o.Time);
         }
-        
     }
 }

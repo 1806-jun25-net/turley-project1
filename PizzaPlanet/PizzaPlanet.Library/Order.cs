@@ -6,6 +6,8 @@ namespace PizzaPlanet.Library
 {
     public class Order
     {
+        public static readonly int TimeBetweenOrders = 120;
+
         /// <summary>
         /// Store the order is placed at.
         /// </summary>
@@ -47,6 +49,10 @@ namespace PizzaPlanet.Library
         /// <param name="store"></param>
         public Order(User customer, Location store)
         {
+            var LastOrder = customer.LastOrder();
+            //order fails if customer placed too soon
+            if (LastOrder.Store.Id == store.Id && (DateTime.Now - LastOrder.Time).TotalMinutes < TimeBetweenOrders)
+                throw new PizzaTooSoonException("User has ordered from this store too recently.");
             Store = store;
             Customer = customer;
             Time = DateTime.MinValue;
@@ -143,12 +149,6 @@ namespace PizzaPlanet.Library
         public bool CanAddPizza()
         {
             return NumPizza < MaxPizzas && Price() < MaxPrice;
-        }
-
-        public static Order GetLastOrder(string userName)
-        {
-            //TODO
-            return null;
         }
         
     }

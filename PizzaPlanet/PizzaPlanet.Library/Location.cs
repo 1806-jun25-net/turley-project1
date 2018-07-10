@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PizzaPlanet.Library
 {
+    
     public class Location
     {
         private static IEnumerable<Location> LocationsReal = null;
@@ -72,7 +74,27 @@ namespace PizzaPlanet.Library
         /// <summary>
         /// Order History
         /// </summary>
-        internal List<Order> Orders;
+        private IEnumerable<Order> OrdersReal;
+
+        
+        public IEnumerable<Order> Orders()
+        {
+            if (OrdersReal == null)
+                OrdersReal =  PizzaRepository.Repo().GetOrders(this.Id);
+            return OrdersReal;
+        }
+
+        /// <summary>
+        /// Adds order to list when it is placed
+        /// </summary>
+        /// <param name="order"></param>
+        private void AddOrder(Order order)
+        {
+            if (OrdersReal == null)
+                Orders();
+            OrdersReal = OrdersReal.Concat(new[] { order });
+            OrdersReal.OrderBy(o => o.Time);
+        }
 
         /// <summary>
         /// Id Number for next order = Total number of orders + 1
@@ -97,7 +119,8 @@ namespace PizzaPlanet.Library
             if (id < 100 || id > 999)
                 throw new ArgumentException("Input out of range, store number must be 3 digits");
             Id = id;
-            Orders = new List<Order>();
+            OrdersReal = null;
+            //orders are loaded when asked for
         }
 
         /// <summary>
@@ -130,13 +153,12 @@ namespace PizzaPlanet.Library
                 if (toppings[i] > Toppings[i])
                     return false;
             }
-
             //If yes, adds order to list and decreases inventory
             //Places the order
             o.Time = DateTime.Now;
-            o.Customer.SetLastOrder(o);
             o.Id = NextOrder++;
-            Orders.Add(o);
+            o.Customer.AddOrder(o);
+            AddOrder(o);
             Dough -= dough;
             for (int i = 0; i < toppings.Length; i++)
                 Toppings[i] -= toppings[i];

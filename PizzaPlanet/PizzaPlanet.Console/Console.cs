@@ -14,10 +14,10 @@ namespace PizzaPlanet.Application
     internal static class Console
 
     {
-        //private static readonly string Logo = "                     / (############*                                           \r\n           ###/ /#/              ,#########                                    \r\n         (# ####/###*    #/          #########.                                \r\n        /##(# #### ,# *,.            .###/*####                                \r\n        #*(#  ## (#*#.       ###.   .###    *#                                 \r\n     *.  #/#(#*##(.##      ####( .#######/                                     \r\n   ####/./#,#  #/##,      .#####(,     ####  ##########.######### .########.   \r\n              ..           ###        ####     #####/    /#####  ####  ####    \r\n    .* (###########*        ##        (###    #####(    .#####   *###  ####     \r\n                (########* #         ####  #####(    (#####     ####(####*     \r\n                   #########.                                           ..     \r\n              .     #########                                  .,,,            \r\n          ,###    .########(                                 .####.      *,    \r\n         ####(.#######( ,(                                   ####        ..    \r\n        ,####/.     .#### ,####.  .   (########  .########  ####.              \r\n        .###        #### .###/ /###  (###. #### ####   ### (###(               \r\n         ##        ####  ####  ###   #### ,###  ###/,##(   ####                \r\n         (         ###########(#########  ############(/((#####/**.           ";
+        private static readonly string Logo = "                     / (############*                                           \r\n           ###/ /#/              ,#########                                    \r\n         (# ####/###*    #/          #########.                                \r\n        /##(# #### ,# *,.            .###/*####                                \r\n        #*(#  ## (#*#.       ###.   .###    *#                                 \r\n     *.  #/#(#*##(.##      ####( .#######/                                     \r\n   ####/./#,#  #/##,      .#####(,     ####  ##########.######### .########.   \r\n              ..           ###        ####     #####/    /#####  ####  ####    \r\n    .* (###########*        ##        (###    #####(    .#####   *###  ####     \r\n                (########* #         ####  #####(    (#####     ####(####*     \r\n                   #########.                                           ..     \r\n              .     #########                                  .,,,            \r\n          ,###    .########(                                 .####.      *,    \r\n         ####(.#######( ,(                                   ####        ..    \r\n        ,####/.     .#### ,####.  .   (########  .########  ####.              \r\n        .###        #### .###/ /###  (###. #### ####   ### (###(               \r\n         ##        ####  ####  ###   #### ,###  ###/,##(   ####                \r\n         (         ###########(#########  ############(/((#####/**.           ";
         //BufferWidth = 120 default
         private static readonly string WelcomeMessage = "Welcome to Pizza Planet!";
-        static readonly string PressEnterMessage = "(Press Enter to continue...)";
+        static readonly string PressEnterMessage = "(Press ENTER to continue)";
 
         private static User CurrentUser = null;
         //Set to null to denote no location has been selected yet
@@ -26,9 +26,10 @@ namespace PizzaPlanet.Application
 
         public static void StartScreen()
         {
-            //System.Console.WriteLine(Logo);
-
             OpenDB();
+            System.Console.WriteLine(Logo);
+            System.Console.WriteLine(PressEnterMessage);
+            System.Console.ReadLine();
             TopMessage = WelcomeMessage;
             LoginScreen();
         }
@@ -55,28 +56,31 @@ namespace PizzaPlanet.Application
             System.Console.WriteLine();
             TopMessage = "";
             if(CurrentUser!= null)
-                TopMessage = "("+CurrentUser.Name+")";
+                TopMessage = "<"+CurrentUser.Name+">";
         }
 
         static readonly string NoUserMessage = "Username not found...";
-        static readonly string LoginMessage = "Please Enter Username to continue:";
+        static readonly string LoginMessage = "Please ENTER Username to continue:\r\n(ENTER nothing to EXIT)";
 
 
         static void LoginScreen()
         {
             while (CurrentUser == null)
             {
+                CurrentUser = null;
                 ClearScreen();
                 string name;
                 System.Console.WriteLine(LoginMessage);
                 name = System.Console.ReadLine();
-                CurrentUser = User.TryUser(name);
-                if (name.Length < 4) //input too short
+                if (name == "" || name == "nothing") //exit
+                    break;
+                else if (name.Length < 4) //input too short
                 {
-                    TopMessage = "Username too short, must be 4+ characters";
+                    TopMessage = "Username too short, must be at least 4 characters";
                     continue;
                 }
-                else if (CurrentUser != null)   //found user
+                CurrentUser = User.TryUser(name);
+                if (CurrentUser != null)   //found user
                 {
                     TopMessage = "Welcome, " + CurrentUser.Name;
                     WhatNextScreen();
@@ -104,7 +108,6 @@ namespace PizzaPlanet.Application
                                 what = false;
                                 break;
                             case (char)27:
-                                CurrentUser = null;
                                 ExitScreen();
                                 return;
                             default:
@@ -113,12 +116,12 @@ namespace PizzaPlanet.Application
                     }
                 }
             }
-            CurrentUser = null;
             ExitScreen();
         }
 
-
+        
         private static readonly string WhatNextMessage = "What would you like to do?";
+        private static readonly string TooSoonMessage = "You're ordering too fast, try again in: ";
         //private static readonly string BadInputMessage = "Hm? Please try again";
         private static readonly string[] WhatNextCommands = {
             "Start an Order",
@@ -138,7 +141,15 @@ namespace PizzaPlanet.Application
                 {
                     case '1'://Start order
                         SelectLocationScreen();
-                        OrderScreen(new Order(CurrentUser, CurrentLocation ));
+                        try
+                        {
+                            OrderScreen(new Order(CurrentUser, CurrentLocation));
+                        }
+                        catch (PizzaTooSoonException)
+                        {
+                            int minutes = Math.Max(1,120-(int)Math.Truncate((DateTime.Now - CurrentUser.LastOrder().Time).TotalMinutes));
+                            TopMessage = TooSoonMessage + minutes + " minutes";
+                        }
                         continue;
                     case '2'://logout
                         {
@@ -153,7 +164,7 @@ namespace PizzaPlanet.Application
             }
         }
 
-        static readonly string DefaultLocationMesage = "Use saved location?";
+       //static readonly string DefaultLocationMesage = "Use saved location?";
        static readonly string ChooseLocationMessage = "Please select location:";
          static void SelectLocationScreen()
         {
@@ -190,8 +201,7 @@ namespace PizzaPlanet.Application
          static readonly string[] OrderScreenCommands = {
             "Add a Pizza",
             "Remove a Pizza",
-            "Change Location",
-            "Complete Order"
+            "Change Location"
         };
         static void OrderScreen(Order order)
         {
@@ -202,6 +212,7 @@ namespace PizzaPlanet.Application
                 System.Console.WriteLine(WhatNextMessage);
                 for (int i = 0; i < OrderScreenCommands.Length; i++)
                     System.Console.WriteLine((i + 1) + " : " + OrderScreenCommands[i]);
+                System.Console.WriteLine("ENTER : Complete Order");
                 System.Console.WriteLine("ESC : Cancel Order");
                 char input = System.Console.ReadKey().KeyChar;
                 System.Console.WriteLine();
@@ -234,7 +245,7 @@ namespace PizzaPlanet.Application
                             }
                         }
                         continue;
-                    case '4'://Complete order
+                    case (char)13://Complete order
                         if (order.NumPizza == 0)
                         {
                             TopMessage = NoPizzasMessage;
@@ -465,11 +476,12 @@ namespace PizzaPlanet.Application
 
         }
 
-        static readonly string ExitMessage = "Goodbye for now!";
+        static readonly string ExitMessage = "Goodbye for now!\r\n\r\n(Press ENTER to close)";
         static void ExitScreen()
         {
+            CurrentUser = null;
+            TopMessage = ExitMessage;
             ClearScreen();
-            System.Console.WriteLine(ExitMessage);
             System.Console.ReadLine();
             return;
         }
