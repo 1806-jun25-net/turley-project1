@@ -17,7 +17,7 @@ namespace PizzaPlanet.Application
             var optionsBuilder = new DbContextOptionsBuilder<Project1PizzaPlanetContext>();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("PizzaPlanet"));
             var options = optionsBuilder.Options;
-            //new YourAppDbContext(options)
+            //new Repo(new YourAppDbContext(options))
             
             //start console app
             Console.StartScreen();
