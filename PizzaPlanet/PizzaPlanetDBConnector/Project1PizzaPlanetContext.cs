@@ -43,7 +43,7 @@ namespace PizzaPlanet.DBData
                     .WithMany(p => p.Pizza)
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Pizza__OrderID__160F4887");
+                    .HasConstraintName("FK__Pizza__OrderID__498EEC8D");
             });
 
             modelBuilder.Entity<PizzaOrder>(entity =>
@@ -54,7 +54,7 @@ namespace PizzaPlanet.DBData
 
                 entity.Property(e => e.StoreId).HasColumnName("StoreID");
 
-                entity.Property(e => e.Total).HasColumnType("money");
+                entity.Property(e => e.Total).HasColumnType("decimal(10, 2)");
 
                 entity.Property(e => e.Username)
                     .IsRequired()
@@ -64,13 +64,13 @@ namespace PizzaPlanet.DBData
                     .WithMany(p => p.PizzaOrder)
                     .HasForeignKey(d => d.StoreId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PizzaOrde__Store__114A936A");
+                    .HasConstraintName("FK__PizzaOrde__Store__44CA3770");
 
                 entity.HasOne(d => d.UsernameNavigation)
                     .WithMany(p => p.PizzaOrder)
                     .HasForeignKey(d => d.Username)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PizzaOrde__Usern__123EB7A3");
+                    .HasConstraintName("FK__PizzaOrde__Usern__45BE5BA9");
             });
 
             modelBuilder.Entity<PizzaUser>(entity =>
@@ -121,7 +121,7 @@ namespace PizzaPlanet.DBData
                     .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Income)
-                    .HasColumnType("decimal(18, 0)")
+                    .HasColumnType("decimal(10, 2)")
                     .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Mushroom)
