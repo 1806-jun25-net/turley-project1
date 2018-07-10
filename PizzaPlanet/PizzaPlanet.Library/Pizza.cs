@@ -189,13 +189,13 @@ namespace PizzaPlanet.Library
             return Math.Round(price,2);
         }
 
-        public override bool Equals(object obj)
-        {
-            if (obj.GetType() == typeof(Pizza))
-                return ((Pizza)obj).ToInt() == this.ToInt();
-            else
-                return false;
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    if (obj.GetType() == typeof(Pizza))
+        //        return ((Pizza)obj).ToInt() == this.ToInt();
+        //    else
+        //        return false;
+        //}
 
     }
 }

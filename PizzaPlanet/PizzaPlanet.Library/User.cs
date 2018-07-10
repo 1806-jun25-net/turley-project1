@@ -77,6 +77,7 @@ namespace PizzaPlanet.Library
 
         /// <summary>
         /// Last order placed, to prevent multiple orders from same location within 2 hours
+        /// TODO
         /// </summary>
         private Order LastOrder;
 

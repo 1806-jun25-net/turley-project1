@@ -53,17 +53,55 @@ namespace PizzaPlanet.Library
             return Mapper.Map(_db.Store.AsNoTracking().ToList());
         }
 
+        /// <summary>
+        /// Gets all previous users
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<User> GetUsers()
         {
             return Mapper.Map(_db.PizzaUser.AsNoTracking().ToList());
         }
 
+        /// <summary>
+        /// Adds a user to the database
+        /// </summary>
+        /// <param name="u"></param>
         public void AddUser(User u)
         {
             _db.PizzaUser.Add(Mapper.Map(u));
             Save();
         }
         
+        /// <summary>
+        /// Updates the database with the order and associated pizzas.
+        /// Also updates the location's inventory
+        /// </summary>
+        /// <param name="o"></param>
+        public void PlaceOrder(Order o)
+        {
+            //check if the order has been placed to the location
+            if (o.Id == -1)
+                throw new ArgumentException("Order was not placed first.");
+            _db.PizzaOrder.Add(Mapper.Map(o));
+            var pizzas = new Dictionary<int,DBData.Pizza>();
+            for(int i = 0; i < o.NumPizza; i++)
+            {
+                int code = o.Pizzas[i].ToInt();
+                if (pizzas.Keys.Contains(code))
+                    pizzas[code].Quantity++;
+                else
+                {
+                    var dbpizza = new DBData.Pizza
+                    { Quantity=1, OrderId = o.IdFull(), Code = code };
+                    pizzas.Add(code, dbpizza);
+                }
+            }
+            foreach (DBData.Pizza DBp in pizzas.Values)
+                _db.Pizza.Add(DBp);
+            _db.Store.Update(Mapper.Map(o.Store));
+            Save();
+        }
+
         /// <summary>
         /// Persist changes to the data source.
         /// </summary>

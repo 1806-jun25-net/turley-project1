@@ -6,33 +6,49 @@ namespace PizzaPlanet.Library
 {
     public class Location
     {
-        private static List<Location> LocationsReal = null;
-        
-        public static List<Location> Locations()
+        private static IEnumerable<Location> LocationsReal = null;
+
+        public static IEnumerable<Location> Locations()
         {
             if (LocationsReal == null)
-                LoadLocationsTemp();
+                LocationsReal = PizzaRepository.Repo().GetLocations();
             return LocationsReal;
         }
+
         public static Location GetLocation(int id)
         {
-            foreach(Location loc in Locations())
+            foreach (Location loc in Locations())
             {
                 if (loc.Id == id)
-                    return loc; 
+                    return loc;
             }
             return null;
         }
 
-
-        public static void LoadLocationsTemp()
+        //temp for location creation
+        public static IEnumerable<Location> LoadLocationsTemp()
         {
-            LocationsReal = new Dictionary<int,Location>();
-            LocationsReal.Add(101,new Location(101));
-            LocationsReal.Add(723,new Location(723));
-            LocationsReal.Add(988,new Location(988));
+            var LocationsTemp = new List<Location>();
+            LocationsTemp.Add(new Location(101));
+            LocationsTemp.Add(new Location(723));
+            LocationsTemp.Add(new Location(988));
+            foreach (Location loc in LocationsReal)
+                loc.FullInventory();
+            return LocationsTemp;
         }
 
+        /// <summary>
+        /// One month worth of supplies
+        /// </summary>
+        private static readonly decimal full = 2500.0M;
+        private void FullInventory()
+        {
+            Dough = full;
+            for(int i = 0; i < Toppings.Length; i++)
+            {
+                Toppings[i] = full;
+            }
+        }
 
         /*  Inventory Notes: 1 amount = 1 Small pizza worth, for each type
             Medium = 1.5, large = 2
@@ -53,7 +69,7 @@ namespace PizzaPlanet.Library
         /// <summary>
         /// Order History
         /// </summary>
-        private Dictionary<int, Order> Orders = null;
+        internal List<Order> Orders;
 
         /// <summary>
         /// Id Number for next order = Total number of orders + 1
@@ -70,7 +86,7 @@ namespace PizzaPlanet.Library
         public readonly int Id;
 
         /// <summary>
-        /// Creates new Location with given Id (Store Number) and 
+        /// Creates new Location with given Id (Store Number) and empty orderhistory and empty inventory
         /// </summary>
         /// <param name="i"></param>
         public Location(int id)
@@ -78,6 +94,7 @@ namespace PizzaPlanet.Library
             if (id < 100 || id > 999)
                 throw new ArgumentException("Input out of range, store number must be 3 digits");
             Id = id;
+            Orders = new List<Order>();
         }
 
         /// <summary>
@@ -116,7 +133,7 @@ namespace PizzaPlanet.Library
             o.Time = DateTime.Now;
             o.Customer.SetLastOrder(o);
             o.Id = NextOrder++;
-            Orders.Add(o.Id, o);
+            Orders.Add(o);
             Dough -= dough;
             for (int i = 0; i < toppings.Length; i++)
                 Toppings[i] -= toppings[i];

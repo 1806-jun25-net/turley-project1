@@ -35,6 +35,7 @@ namespace PizzaPlanet.Library
             {
                 Id = loc.Id,
                 //inventory
+                Dough = loc.Dough,
                 Bacon = loc.Toppings[(int)Pizza.ToppingType.Bacon],
                 Beef = loc.Toppings[(int)Pizza.ToppingType.Beef],
                 BlackOlive = loc.Toppings[(int)Pizza.ToppingType.Black_Olive],
@@ -72,23 +73,37 @@ namespace PizzaPlanet.Library
                 u.StoreId = user.DefLocation.Id;
             return u;
         }
-
-        //Pizzas must be done here as well
+        
+        //Gets pizzas
         public static Order Map(DBData.PizzaOrder order)
         {
-            Order o = new Order(User.TryUser(order.Username), Location.GetLocation(order.StoreId));
-
+            Order o = new Order(
+                User.TryUser(order.Username), 
+                Location.GetLocation(order.StoreId),
+                order.OrderTime,
+                (int)Math.Truncate(order.Id)
+                );
+            foreach(DBData.Pizza p in order.Pizza)
+            {
+                for(int i =0;i<p.Quantity; i++)
+                    o.AddPizza(new Pizza(p.Code));
+            }
             return o;
         }
 
-        //Pizzas must be done here as well
+        //does nothing with pizzas
         public static DBData.PizzaOrder Map(Order order)
         {
-            //TODO
-            return null;
+            DBData.PizzaOrder o = new DBData.PizzaOrder();
+            o.Id = order.IdFull();
+            o.OrderTime = order.Time;
+            o.StoreId = order.Store.Id;
+            o.Total = order.Price();
+            o.Username = order.Customer.Name;
+            return o;
         }
 
-        //for multiple at once (through IEnumerables)
+        //below are for multiple at once (through IEnumerables)
         public static IEnumerable<Location> Map(IEnumerable<DBData.Store> stores)
         {
             return stores.Select(Map);

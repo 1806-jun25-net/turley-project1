@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using PZ = PizzaPlanet.Library.Pizza;
+
 namespace PizzaPlanet.Application
 {
     internal static class Console
@@ -15,7 +17,7 @@ namespace PizzaPlanet.Application
         //private static readonly string Logo = "                     / (############*                                           \r\n           ###/ /#/              ,#########                                    \r\n         (# ####/###*    #/          #########.                                \r\n        /##(# #### ,# *,.            .###/*####                                \r\n        #*(#  ## (#*#.       ###.   .###    *#                                 \r\n     *.  #/#(#*##(.##      ####( .#######/                                     \r\n   ####/./#,#  #/##,      .#####(,     ####  ##########.######### .########.   \r\n              ..           ###        ####     #####/    /#####  ####  ####    \r\n    .* (###########*        ##        (###    #####(    .#####   *###  ####     \r\n                (########* #         ####  #####(    (#####     ####(####*     \r\n                   #########.                                           ..     \r\n              .     #########                                  .,,,            \r\n          ,###    .########(                                 .####.      *,    \r\n         ####(.#######( ,(                                   ####        ..    \r\n        ,####/.     .#### ,####.  .   (########  .########  ####.              \r\n        .###        #### .###/ /###  (###. #### ####   ### (###(               \r\n         ##        ####  ####  ###   #### ,###  ###/,##(   ####                \r\n         (         ###########(#########  ############(/((#####/**.           ";
         //BufferWidth = 120 default
         private static readonly string WelcomeMessage = "Welcome to Pizza Planet!";
-        static readonly string PressAnyKeyMessage = "(Press any key to continue...)";
+        static readonly string PressEnterMessage = "(Press Enter to continue...)";
 
         private static User CurrentUser = null;
         //Set to null to denote no location has been selected yet
@@ -52,10 +54,12 @@ namespace PizzaPlanet.Application
             System.Console.WriteLine(TopMessage);
             System.Console.WriteLine();
             TopMessage = "";
+            if(CurrentUser!= null)
+                TopMessage = "("+CurrentUser.Name+")";
         }
 
         static readonly string NoUserMessage = "Username not found...";
-        static readonly string LoginMessage = "Please enter Username to continue:";
+        static readonly string LoginMessage = "Please Enter Username to continue:";
 
 
         static void LoginScreen()
@@ -100,6 +104,7 @@ namespace PizzaPlanet.Application
                                 what = false;
                                 break;
                             case (char)27:
+                                CurrentUser = null;
                                 ExitScreen();
                                 return;
                             default:
@@ -108,6 +113,7 @@ namespace PizzaPlanet.Application
                     }
                 }
             }
+            CurrentUser = null;
             ExitScreen();
         }
 
@@ -154,24 +160,22 @@ namespace PizzaPlanet.Application
             
             while (true)
             {
-                //TODO default location, if current = null. set current to null when user switch
                 //note assumes small number of location options <10
                 //If more, consider scrolling/subset chosen
                 //possible serach new location
                 ClearScreen();
                 System.Console.WriteLine(ChooseLocationMessage);
-                int[] ids = new int[Location.Locations().Count];
-                int n = 0;
-                foreach (int i in Location.Locations().Keys)
+                List<int> ids = new List<int>();
+                foreach (Location loc in Location.Locations())
+                    ids.Add(loc.Id);
+                ids.Sort();
+                for (int i = 0; i < ids.Count; i++)
                 {
-                    System.Console.WriteLine((n + 1) + " : Store #" + i);
-                    ids[n] = i;
-                    n++;
+                    System.Console.WriteLine((i + 1) + " : Store #" + ids[i]);
                 }
                 System.Console.WriteLine("ESC : Cancel");
                 char input = System.Console.ReadKey().KeyChar;
-                System.Console.WriteLine();
-                if (input > '0' && input <= '0' + n)
+                if (input > '0' && input <= '0' + ids.Count)
                 {
                     CurrentLocation = Location.GetLocation(ids[input - '1']);
                     return;
@@ -201,7 +205,7 @@ namespace PizzaPlanet.Application
                 System.Console.WriteLine("ESC : Cancel Order");
                 char input = System.Console.ReadKey().KeyChar;
                 System.Console.WriteLine();
-                Pizza pizza = null;
+                PZ pizza = null;
                 int pizzaID = -1;
                 switch (input)
                 {
@@ -242,8 +246,9 @@ namespace PizzaPlanet.Application
                                 ClearScreen();
                                 System.Console.WriteLine(order.ToString());
                                 System.Console.WriteLine("\r\n" + OrderSuccessMessage);
-                                System.Console.WriteLine(PressAnyKeyMessage);
-                                System.Console.Read();
+                                System.Console.WriteLine(PressEnterMessage);
+                                PizzaRepository.Repo().PlaceOrder(order);
+                                System.Console.ReadLine();
                                 return;
                             }
                             else
@@ -306,23 +311,23 @@ namespace PizzaPlanet.Application
             }
         }
         
-        static Pizza CreatePizzaScreen()
+        static PZ CreatePizzaScreen()
         {
-            Pizza pizza = new Pizza();
+            PZ pizza = new PZ();
             //Select size
             while(true)
             {
                 ClearScreen();
                 System.Console.WriteLine("What Size?");
-                for (int i = 0; i < Pizza.Sizes.Length; i++)
-                    System.Console.WriteLine((i+1)+" : "+Pizza.Sizes[i]);
+                for (int i = 0; i < PZ.Sizes.Length; i++)
+                    System.Console.WriteLine((i+1)+" : "+PZ.Sizes[i]);
                 System.Console.WriteLine("ESC : Cancel Pizza");
                 char input = System.Console.ReadKey().KeyChar;
                 if (input == 27)
                     return null;
-                else if (input >= '1' && input <= '1'+ Pizza.Sizes.Length)
+                else if (input >= '1' && input <= '1'+ PZ.Sizes.Length)
                 {
-                    pizza.Size = (Pizza.SizeType)(input - '1' + Pizza.SizeType.Small);
+                    pizza.Size = (PZ.SizeType)(input - '1' + PZ.SizeType.Small);
                     break;
                 }
             }
@@ -331,15 +336,15 @@ namespace PizzaPlanet.Application
             {
                 ClearScreen();
                 System.Console.WriteLine("What Crust?");
-                for (int i = 0; i < Pizza.CrustTypes.Length; i++)
-                    System.Console.WriteLine((i + 1) + " : " + Pizza.CrustTypes[i]);
+                for (int i = 0; i < PZ.CrustTypes.Length; i++)
+                    System.Console.WriteLine((i + 1) + " : " + PZ.CrustTypes[i]);
                 System.Console.WriteLine("ESC : Cancel Pizza");
                 char input = System.Console.ReadKey().KeyChar;
                 if (input == 27)
                     return null;
-                else if (input >= '1' && input <= '1' + Pizza.CrustTypes.Length)
+                else if (input >= '1' && input <= '1' + PZ.CrustTypes.Length)
                 {
-                    pizza.Crust = (Pizza.CrustType)(input - '1');
+                    pizza.Crust = (PZ.CrustType)(input - '1');
                     break;
                 }
             }
@@ -348,15 +353,15 @@ namespace PizzaPlanet.Application
             {
                 ClearScreen();
                 System.Console.WriteLine("Sauce?");
-                for (int i = 0; i < Pizza.Amounts.Length; i++)
-                    System.Console.WriteLine((i + 1) + " : " + Pizza.Amounts[i]);
+                for (int i = 0; i < PZ.Amounts.Length; i++)
+                    System.Console.WriteLine((i + 1) + " : " + PZ.Amounts[i]);
                 System.Console.WriteLine("ESC : Cancel Pizza");
                 char input = System.Console.ReadKey().KeyChar;
                 if (input == 27)
                     return null;
-                else if (input >= '1' && input <= '1'+ Pizza.Amounts.Length)
+                else if (input >= '1' && input <= '1'+ PZ.Amounts.Length)
                 {
-                    pizza.Toppings[(int)Pizza.ToppingType.Sauce] = (Pizza.Amount)(input - '1');
+                    pizza.Toppings[(int)PZ.ToppingType.Sauce] = (PZ.Amount)(input - '1');
                     break;
                 }
             }
@@ -365,15 +370,15 @@ namespace PizzaPlanet.Application
             {
                 ClearScreen();
                 System.Console.WriteLine("Cheese?");
-                for (int i = 0; i < Pizza.Amounts.Length; i++)
-                    System.Console.WriteLine((i + 1) + " : " + Pizza.Amounts[i]);
+                for (int i = 0; i < PZ.Amounts.Length; i++)
+                    System.Console.WriteLine((i + 1) + " : " + PZ.Amounts[i]);
                 System.Console.WriteLine("ESC : Cancel Pizza");
                 char input = System.Console.ReadKey().KeyChar;
                 if (input == 27)
                     return null;
-                else if (input >= '1' && input <= '1'+ Pizza.Amounts.Length)
+                else if (input >= '1' && input <= '1'+ PZ.Amounts.Length)
                 {
-                    pizza.Toppings[(int)Pizza.ToppingType.Cheese] = (Pizza.Amount)(input - '1');
+                    pizza.Toppings[(int)PZ.ToppingType.Cheese] = (PZ.Amount)(input - '1');
                     break;
                 }
             }
@@ -383,24 +388,24 @@ namespace PizzaPlanet.Application
                 pizza = null;
             return pizza;
     }
-        static bool ToppingSelectScreen(Pizza pizza)
+        static bool ToppingSelectScreen(PZ pizza)
         {
             while (true)
             {
                 ClearScreen();
                 System.Console.WriteLine("Toppings? (Select to change amount)");
                 //toppings start at 2 (pepperoni)
-                for (int i = 2; i < Pizza.ToppingTypes.Length; i++)
+                for (int i = 2; i < PZ.ToppingTypes.Length; i++)
                 {
                     string printMe = "";
                     if (i < 11)
-                        printMe = (i-1) + " : " + Pizza.ToppingTypes[i] +" : "  + pizza.Toppings[i].ToString();
+                        printMe = (i-1) + " : " + PZ.ToppingTypes[i] +" : "  + pizza.Toppings[i].ToString();
                     else if (i == 11)
-                        printMe = "0 : " + Pizza.ToppingTypes[i] + " : " + pizza.Toppings[i].ToString();
+                        printMe = "0 : " + PZ.ToppingTypes[i] + " : " + pizza.Toppings[i].ToString();
                     else
                     {
                         char select = (char)('a' + (i - 12)); //12 starts with 'a'
-                        printMe = select + " : " + Pizza.ToppingTypes[i] + " : " + pizza.Toppings[i].ToString();
+                        printMe = select + " : " + PZ.ToppingTypes[i] + " : " + pizza.Toppings[i].ToString();
                     }
                     System.Console.WriteLine(printMe);
                 }
@@ -423,14 +428,14 @@ namespace PizzaPlanet.Application
                     topping = 11;
                 }
                 //toppings 12+. MaxTopping = Length -1
-                else if (input >= 'a' && input <= ('a' + (Pizza.ToppingTypes.Length-1)-12))
+                else if (input >= 'a' && input <= ('a' + (PZ.ToppingTypes.Length-1)-12))
                 {
                     topping = (input - 'a' + 12);
                 }
                 if(topping > -1)
                 {
                     int amount = HowMuchScreen(topping);
-                    pizza.Toppings[topping] = (Pizza.Amount)amount;
+                    pizza.Toppings[topping] = (PZ.Amount)amount;
                 }
             }
         }
@@ -440,15 +445,15 @@ namespace PizzaPlanet.Application
             while (true)
             {
                 ClearScreen();
-                System.Console.WriteLine(Pizza.ToppingTypes[topping]+ "?");
-                for (int i =0; i < Pizza.Amounts.Length; i++)
+                System.Console.WriteLine(PZ.ToppingTypes[topping]+ "?");
+                for (int i =0; i < PZ.Amounts.Length; i++)
                 {
-                    System.Console.WriteLine((i + 1) + " : " + Pizza.Amounts[i]);
+                    System.Console.WriteLine((i + 1) + " : " + PZ.Amounts[i]);
                 }
 
                 System.Console.WriteLine("ESC : Cancel Topping");
                 char input = System.Console.ReadKey().KeyChar;
-                if (input >= '1' && input <= '1'+Pizza.Amounts.Length)
+                if (input >= '1' && input <= '1'+ Library.Pizza.Amounts.Length)
                 {
                     return (int)(input - '1');
                 }

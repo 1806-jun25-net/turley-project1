@@ -56,6 +56,21 @@ namespace PizzaPlanet.Library
         }
 
         /// <summary>
+        /// Creating an order that was already placed
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="store"></param>
+        /// <param name="orderTime"></param>
+        /// <param name="id"></param>
+        public Order(User customer, Location store, DateTime orderTime, int id)
+            : this(customer, store)
+        {
+            Time = orderTime;
+            Id = id;
+        }
+
+
+        /// <summary>
         /// Adds a pizza to the order
         /// </summary>
         /// <param name="p"></param>
@@ -111,6 +126,18 @@ namespace PizzaPlanet.Library
                 s += "\r\n" + Pizzas[i].ToString();
             s += "\r\nTotal Price: " + Price();
             return s;
+        }
+
+        /// <summary>
+        /// full version of id, which includes store number as a decimal
+        /// </summary>
+        /// <returns></returns>
+        internal decimal IdFull()
+        {
+            decimal ret = (decimal)Store.Id;
+            ret = ret / 1000.0M;
+            ret += (decimal)Id;
+            return ret;
         }
 
         public bool CanAddPizza()
