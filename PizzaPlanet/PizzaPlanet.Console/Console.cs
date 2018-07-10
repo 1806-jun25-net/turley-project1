@@ -1,6 +1,10 @@
-﻿using PizzaPlanet.Library;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using PizzaPlanet.DBData;
+using PizzaPlanet.Library;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace PizzaPlanet.Application
@@ -21,8 +25,25 @@ namespace PizzaPlanet.Application
         public static void StartScreen()
         {
             //System.Console.WriteLine(Logo);
+
+            OpenDB();
             TopMessage = WelcomeMessage;
             LoginScreen();
+        }
+
+        /// <summary>
+        /// Opens the database access using PizzaRepository
+        /// </summary>
+        static void OpenDB()
+        {
+            var configBuilder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            IConfigurationRoot configuration = configBuilder.Build();
+            var optionsBuilder = new DbContextOptionsBuilder<Project1PizzaPlanetContext>();
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("PizzaPlanet"));
+            var options = optionsBuilder.Options;
+            PizzaRepository.OpenRepository(new Project1PizzaPlanetContext(options));
         }
 
         static void ClearScreen()

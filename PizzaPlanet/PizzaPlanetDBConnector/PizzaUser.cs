@@ -10,7 +10,6 @@ namespace PizzaPlanet.DBData
             PizzaOrder = new HashSet<PizzaOrder>();
         }
 
-        public int Id { get; set; }
         public string Username { get; set; }
         public int StoreId { get; set; }
 

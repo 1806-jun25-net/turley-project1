@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PizzaPlanet.Library
@@ -7,26 +8,60 @@ namespace PizzaPlanet.Library
     public class User
     {
 
-        private static Dictionary<string, User> Users = new Dictionary<string, User>();
+        /// <summary>
+        /// storage for list of users. instantiated on first call to Users()
+        /// </summary>
+        private static IEnumerable<User> UsersReal = null;
+
+        /// <summary>
+        /// public accessor for list of users
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<User> Users()
+        { 
+            if(UsersReal == null)
+            {
+                UsersReal = PizzaRepository.Repo().GetUsers();
+            }
+            return UsersReal;
+        }
 
         //old xml version 
-        public static void LoadUsers()
+        public static void LoadUsersOld()
         {
-            //TODO
+            
         }
-
+        
+        /// <summary>
+        /// Attempts to find user by name. If user exists, returns that user. else null
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static User TryUser(string name)
         {
-            if (Users.ContainsKey(name))
-                return Users[name];
+            foreach (User u in Users())
+            {
+                if (u.Name == name)
+                    return u;
+            }
             return null;
         }
-
+        
+        /// <summary>
+        /// Returns the user if he exists (failsafe), else makes a new one with given name and returns
+        /// Addition to database and local is handled here
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static User MakeUser(string name)
         {
             User ret = TryUser(name);
             if (ret == null)
+            {
                 ret = new User(name);
+                PizzaRepository.Repo().AddUser(ret);
+                UsersReal = UsersReal.Concat(new[] { ret });
+            }
             return ret;
         }
 
@@ -38,7 +73,7 @@ namespace PizzaPlanet.Library
         /// <summary>
         /// User's chosen Default Location for ordering. Null until set
         /// </summary>
-        public Location DefLocation { get; set; }
+        public Location DefLocation { get; }
 
         /// <summary>
         /// Last order placed, to prevent multiple orders from same location within 2 hours
@@ -52,7 +87,12 @@ namespace PizzaPlanet.Library
             Name = name;
             DefLocation = null;
             LastOrder = null;
-            Users.Add(name, this);
+        }
+
+        public User(string name, Location defLocation) : this(name)
+        {
+            DefLocation = defLocation;
+
         }
 
         /// <summary>

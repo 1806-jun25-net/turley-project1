@@ -6,26 +6,26 @@ namespace PizzaPlanet.Library
 {
     public class Location
     {
-        private static Dictionary<int,Location> LocationsReal = null;
+        private static List<Location> LocationsReal = null;
         
-        public static Dictionary<int,Location> Locations()
+        public static List<Location> Locations()
         {
             if (LocationsReal == null)
-                LoadLocations();
+                LoadLocationsTemp();
             return LocationsReal;
         }
         public static Location GetLocation(int id)
         {
-            foreach(int i in Locations().Keys)
+            foreach(Location loc in Locations())
             {
-                if (i == id)
-                    return Locations()[id]; 
+                if (loc.Id == id)
+                    return loc; 
             }
             return null;
         }
 
 
-        public static void LoadLocations()
+        public static void LoadLocationsTemp()
         {
             LocationsReal = new Dictionary<int,Location>();
             LocationsReal.Add(101,new Location(101));
@@ -43,27 +43,27 @@ namespace PizzaPlanet.Library
         /// <summary>
         /// Inventory of each topping.
         /// </summary>
-        private double[] Toppings = new double[Pizza.ToppingTypes.Length];
+        internal decimal[] Toppings = new decimal[Pizza.ToppingTypes.Length];
 
         /// <summary>
         /// Inventory of Dough
         /// </summary>
-        private double Dough = 0;
+        internal decimal Dough = 0;
 
         /// <summary>
         /// Order History
         /// </summary>
-        public Dictionary<int, Order> Orders = new Dictionary<int, Order>();
+        private Dictionary<int, Order> Orders = null;
 
         /// <summary>
         /// Id Number for next order = Total number of orders + 1
         /// </summary>
-        private int NextOrder = 1;
+        internal int NextOrder = 1;
 
         /// <summary>
         /// Money store has earned since 'creation'
         /// </summary>
-        private double Income { get; set; } = 0;
+        internal decimal Income { get; set; } = 0;
         /// <summary>
         /// Id number for store (store number) as a 3 digit number
         /// </summary>
@@ -76,7 +76,7 @@ namespace PizzaPlanet.Library
         public Location(int id)
         {
             if (id < 100 || id > 999)
-                throw new Exception("Input out of range, store number must be 3 digits");
+                throw new ArgumentException("Input out of range, store number must be 3 digits");
             Id = id;
         }
 
@@ -91,14 +91,14 @@ namespace PizzaPlanet.Library
             //Possible todo: change "check" to its own method
 
             //Calculates total dough, toppings required for order
-            double dough = 0;
-            double[] toppings = new double[Toppings.Length]; 
+            decimal dough = 0;
+            decimal[] toppings = new decimal[Toppings.Length]; 
             for(int i = 0;i<o.NumPizza;i++)
             {
-                double s = Pizza.SizeTypeToD(o.Pizzas[i].Size);
+                decimal s = (decimal)Pizza.SizeTypeToD(o.Pizzas[i].Size);
                 dough += s;
                 for(int j = 0; j < toppings.Length;j++)
-                    toppings[j] += s*Pizza.AmountToD(o.Pizzas[i].Toppings[j]);
+                    toppings[j] += s*(decimal)Pizza.AmountToD(o.Pizzas[i].Toppings[j]);
             }
 
             //Check if required dough, toppings exist in store

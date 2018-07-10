@@ -147,22 +147,22 @@ namespace PizzaPlanet.Library
         /// <summary>
         /// Price of the pizza, calculated based on size/toppings. No Tax
         /// </summary>
-        public double Price()
+        public decimal Price()
         {
             //possible todo: change calculation to "as-we-go"
             //Note base prices used here. Should be made static defaults if displayed to user.
 
-            double price = 0.0;
+            decimal price = 0.0M;
             switch (Size)
             {
                 case SizeType.Small:
-                    price = 4.99;
+                    price = 4.99M;
                     break;
                 case SizeType.Medium:
-                    price = 6.99;
+                    price = 6.99M;
                     break;
                 default:
-                    price = 8.99;
+                    price = 8.99M;
                     break;
             }
 
@@ -176,13 +176,13 @@ namespace PizzaPlanet.Library
                 switch (Size)
                 {
                     case SizeType.Small:
-                        price += totalToppings * 0.99;
+                        price += totalToppings * 0.99M;
                         break;
                     case SizeType.Medium:
-                        price += totalToppings * 1.49;
+                        price += totalToppings * 1.49M;
                         break;
                     default:
-                        price += totalToppings * 1.99;
+                        price += totalToppings * 1.99M;
                         break;
                 }
             }

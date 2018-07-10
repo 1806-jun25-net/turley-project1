@@ -12,12 +12,12 @@ namespace PizzaPlanet.DBData
 
         public decimal Id { get; set; }
         public int StoreId { get; set; }
-        public int UserId { get; set; }
+        public string Username { get; set; }
         public DateTime OrderTime { get; set; }
         public decimal Total { get; set; }
 
         public Store Store { get; set; }
-        public PizzaUser User { get; set; }
+        public PizzaUser UsernameNavigation { get; set; }
         public ICollection<Pizza> Pizza { get; set; }
     }
 }

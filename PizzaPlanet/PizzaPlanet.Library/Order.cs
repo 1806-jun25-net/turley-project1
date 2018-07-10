@@ -84,16 +84,16 @@ namespace PizzaPlanet.Library
         /// <summary>
         /// Maximum Price allowed for an order
         /// </summary>
-        public static readonly double MaxPrice = 500.0;
+        public static readonly decimal MaxPrice = 500.0M;
 
         /// <summary>
         /// Calculates the current total price of the order
         /// </summary>
         /// <returns></returns>
-        public double Price()
+        public decimal Price()
         {
             //possible todo: change calculation to "as-we-go"
-            double totalPrice = 0.0;
+            decimal totalPrice = 0.0M;
             for(int i =0;i<NumPizza;i++)
                 totalPrice += Pizzas[i].Price();
             return totalPrice;

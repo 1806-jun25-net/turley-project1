@@ -8,32 +8,77 @@ namespace PizzaPlanet.Library
     {
         public static Location Map(DBData.Store store)
         {
-            //TODO
-            return null;
+            Location loc = new Location(store.Id);
+            //inventory
+            loc.Dough = store.Dough.Value;
+            loc.Toppings[(int)Pizza.ToppingType.Bacon] = store.Bacon.Value;
+            loc.Toppings[(int)Pizza.ToppingType.Beef] = store.Beef.Value;
+            loc.Toppings[(int)Pizza.ToppingType.Black_Olive] = store.BlackOlive.Value;
+            loc.Toppings[(int)Pizza.ToppingType.Cheese] = store.Cheese.Value;
+            loc.Toppings[(int)Pizza.ToppingType.Green_Pepper] = store.GreenPepper.Value;
+            loc.Toppings[(int)Pizza.ToppingType.Ham] = store.Ham.Value;
+            loc.Toppings[(int)Pizza.ToppingType.Mushroom] = store.Mushroom.Value;
+            loc.Toppings[(int)Pizza.ToppingType.Onion] = store.Onion.Value;
+            loc.Toppings[(int)Pizza.ToppingType.Pepperoni] = store.Pepperoni.Value;
+            loc.Toppings[(int)Pizza.ToppingType.Sauce] = store.Sauce.Value;
+            loc.Toppings[(int)Pizza.ToppingType.Sausage] = store.Sausage.Value;
+            //other values
+            loc.NextOrder = store.NextOrder.Value;
+            loc.Income = store.Income.Value;
+            //orderhistory is only loaded when needed
+            return loc;
         }
 
-        public static DBData.Store Map(Location location)
+        public static DBData.Store Map(Location loc)
         {
-            //TODO
-            return null;
+            DBData.Store store = new DBData.Store
+            {
+                Id = loc.Id,
+                //inventory
+                Bacon = loc.Toppings[(int)Pizza.ToppingType.Bacon],
+                Beef = loc.Toppings[(int)Pizza.ToppingType.Beef],
+                BlackOlive = loc.Toppings[(int)Pizza.ToppingType.Black_Olive],
+                Cheese = loc.Toppings[(int)Pizza.ToppingType.Cheese],
+                GreenPepper = loc.Toppings[(int)Pizza.ToppingType.Green_Pepper],
+                Ham = loc.Toppings[(int)Pizza.ToppingType.Ham],
+                Mushroom = loc.Toppings[(int)Pizza.ToppingType.Mushroom],
+                Onion = loc.Toppings[(int)Pizza.ToppingType.Onion],
+                Pepperoni = loc.Toppings[(int)Pizza.ToppingType.Pepperoni],
+                Sauce = loc.Toppings[(int)Pizza.ToppingType.Sauce],
+                Sausage = loc.Toppings[(int)Pizza.ToppingType.Sausage],
+                NextOrder = loc.NextOrder,
+                Income = loc.Income
+            };
+            return store;
         }
+
         public static User Map(DBData.PizzaUser user)
         {
-            //ToDO
-            return null;
+            User u;
+            if (user.StoreId == -1)
+                u = new User(user.Username);
+            else
+                u = new User(user.Username, Location.GetLocation(user.StoreId));
+            return u;
         }
 
         public static DBData.PizzaUser Map(User user)
         {
-            //TODO
-            return null;
+            DBData.PizzaUser u = new DBData.PizzaUser();
+            u.Username = user.Name;
+            if (user.DefLocation == null)
+                u.StoreId = -1;
+            else
+                u.StoreId = user.DefLocation.Id;
+            return u;
         }
 
         //Pizzas must be done here as well
         public static Order Map(DBData.PizzaOrder order)
         {
-            //TODO
-            return null;
+            Order o = new Order(User.TryUser(order.Username), Location.GetLocation(order.StoreId));
+
+            return o;
         }
 
         //Pizzas must be done here as well

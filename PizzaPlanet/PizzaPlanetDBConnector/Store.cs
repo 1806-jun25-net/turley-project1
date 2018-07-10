@@ -11,7 +11,7 @@ namespace PizzaPlanet.DBData
         }
 
         public int Id { get; set; }
-        public int? Income { get; set; }
+        public decimal? Income { get; set; }
         public int? NextOrder { get; set; }
         public decimal? Dough { get; set; }
         public decimal? Sauce { get; set; }
