@@ -27,9 +27,9 @@ namespace PizzaPlanet.Application
         public static void StartScreen()
         {
             OpenDB();
-            System.Console.WriteLine(Logo);
-            System.Console.WriteLine(PressEnterMessage);
-            System.Console.ReadLine();
+            //System.Console.WriteLine(Logo);
+            //System.Console.WriteLine(PressEnterMessage);
+            //System.Console.ReadLine();
             TopMessage = WelcomeMessage;
             LoginScreen();
         }
@@ -60,7 +60,7 @@ namespace PizzaPlanet.Application
         }
 
         static readonly string NoUserMessage = "Username not found...";
-        static readonly string LoginMessage = "Please ENTER Username to continue:\r\n(ENTER nothing to EXIT)";
+        static readonly string LoginMessage = "Please ENTER Username to continue:\r\n(Enter nothing to EXIT)";
 
 
         static void LoginScreen()
@@ -121,10 +121,11 @@ namespace PizzaPlanet.Application
 
         
         private static readonly string WhatNextMessage = "What would you like to do?";
-        private static readonly string TooSoonMessage = "You're ordering too fast, try again in: ";
+        private static readonly string TooSoonMessage = "You ordered from there recently, try again in: ";
         //private static readonly string BadInputMessage = "Hm? Please try again";
         private static readonly string[] WhatNextCommands = {
             "Start an Order",
+            "View Order History",
             "Logout"
         };
         static void WhatNextScreen()
@@ -141,19 +142,23 @@ namespace PizzaPlanet.Application
                 {
                     case '1'://Start order
                         SelectLocationScreen();
+                        Order order;
                         try
                         {
-                            OrderScreen(new Order(CurrentUser, CurrentLocation));
+                            order = new Order(CurrentUser, CurrentLocation);
                         }
                         catch (PizzaTooSoonException)
                         {
                             int minutes = Math.Max(1,120-(int)Math.Truncate((DateTime.Now - CurrentUser.LastOrder().Time).TotalMinutes));
                             TopMessage = TooSoonMessage + minutes + " minutes";
+                            continue;
                         }
+                        OrderScreen(order);
                         continue;
-                    case '2'://logout
+                    case '3'://logout
                         {
-                            CurrentUser = null;
+                            TopMessage = 
+                                WelcomeMessage;
                             return;
                         }
                     case (char)27:

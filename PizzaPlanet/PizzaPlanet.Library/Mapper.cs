@@ -74,7 +74,6 @@ namespace PizzaPlanet.Library
             return u;
         }
         
-        //Gets pizzas
         public static Order Map(DBData.PizzaOrder order)
         {
             Order o = new Order(
@@ -83,7 +82,9 @@ namespace PizzaPlanet.Library
                 order.OrderTime,
                 (int)Math.Truncate(order.Id)
                 );
-            foreach(DBData.Pizza p in order.Pizza)
+            //gets pizzas
+            var pizzas = PizzaRepository.Repo().GetPizzas(order.Id);
+            foreach(DBData.Pizza p in pizzas)
             {
                 for(int i =0;i<p.Quantity; i++)
                     o.AddPizza(new Pizza(p.Code));

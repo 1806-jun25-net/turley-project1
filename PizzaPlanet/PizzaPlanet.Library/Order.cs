@@ -43,7 +43,7 @@ namespace PizzaPlanet.Library
         public int NumPizza { get; private set; }
 
         /// <summary>
-        /// Singular constructor for Order. Pizzas must be added after
+        /// Singular constructor for trying to place a new Order. Pizzas must be added after
         /// </summary>
         /// <param name="customer"></param>
         /// <param name="store"></param>
@@ -62,15 +62,18 @@ namespace PizzaPlanet.Library
         }
 
         /// <summary>
-        /// Creating an order that was already placed
+        /// Creating an order that was already placed, but pizzas need added
         /// </summary>
         /// <param name="customer"></param>
         /// <param name="store"></param>
         /// <param name="orderTime"></param>
         /// <param name="id"></param>
         public Order(User customer, Location store, DateTime orderTime, int id)
-            : this(customer, store)
         {
+            Store = store;
+            Customer = customer;
+            NumPizza = 0;
+            Pizzas = new Pizza[MaxPizzas];
             Time = orderTime;
             Id = id;
         }

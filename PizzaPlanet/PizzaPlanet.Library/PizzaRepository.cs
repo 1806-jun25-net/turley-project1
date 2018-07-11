@@ -71,7 +71,7 @@ namespace PizzaPlanet.Library
             _db.PizzaUser.Add(Mapper.Map(u));
             Save();
         }
-        
+
         /// <summary>
         /// Updates the database with the order and associated pizzas.
         /// Also updates the location's inventory
@@ -83,8 +83,8 @@ namespace PizzaPlanet.Library
             if (o.Id == -1)
                 throw new ArgumentException("Order was not placed first.");
             _db.PizzaOrder.Add(Mapper.Map(o));
-            var pizzas = new Dictionary<int,DBData.Pizza>();
-            for(int i = 0; i < o.NumPizza; i++)
+            var pizzas = new Dictionary<int, DBData.Pizza>();
+            for (int i = 0; i < o.NumPizza; i++)
             {
                 int code = o.Pizzas[i].ToInt();
                 if (pizzas.Keys.Contains(code))
@@ -92,7 +92,7 @@ namespace PizzaPlanet.Library
                 else
                 {
                     var dbpizza = new DBData.Pizza
-                    { Quantity=1, OrderId = o.IdFull(), Code = code };
+                    { Quantity = 1, OrderId = o.IdFull(), Code = code };
                     pizzas.Add(code, dbpizza);
                 }
             }
@@ -108,7 +108,7 @@ namespace PizzaPlanet.Library
         /// <returns></returns>
         public IEnumerable<Order> GetOrders(string name)
         {
-            return Mapper.Map(_db.PizzaOrder.Where(o => (o.Username == name)).ToList().OrderBy(o => o.OrderTime).Reverse());
+            return Mapper.Map(_db.PizzaOrder.Where(o => (o.Username == name)).OrderBy(o => (DateTime.Now - o.OrderTime)));
         }
 
         /// <summary>
@@ -118,7 +118,12 @@ namespace PizzaPlanet.Library
         /// <returns></returns>
         public IEnumerable<Order> GetOrders(int storeId)
         {
-            return Mapper.Map(_db.PizzaOrder.Where(o => (o.StoreId == storeId)).ToList().OrderBy(o=>o.OrderTime).Reverse());
+            return Mapper.Map(_db.PizzaOrder.Where(o => (o.StoreId == storeId)).OrderBy(o => (DateTime.Now - o.OrderTime)));
+        }
+
+        public IEnumerable<DBData.Pizza> GetPizzas(decimal orderId)
+        {
+            return _db.Pizza.Where(p => p.OrderId == orderId);
         }
 
         /// <summary>
@@ -128,5 +133,6 @@ namespace PizzaPlanet.Library
         {
             _db.SaveChanges();
         }
+
     }
 }
