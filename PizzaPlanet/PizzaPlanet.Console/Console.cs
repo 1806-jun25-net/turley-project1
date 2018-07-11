@@ -294,7 +294,7 @@ namespace PizzaPlanet.Application
             while (true)
             {
                 ClearScreen();
-                System.Console.WriteLine(o.ToString());
+                System.Console.WriteLine(o.FullDetails());
                 System.Console.WriteLine("ESC : Return");
                 char input = System.Console.ReadKey().KeyChar;
                 if (input == (char)27)

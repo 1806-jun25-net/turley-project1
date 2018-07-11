@@ -130,10 +130,10 @@ namespace PizzaPlanet.Library
         public override string ToString()
         {
             string s = "";
-            s += "Store: " + Store.Id;
+            s += "Store: <" + Store.Id+">";
             for(int i = 0; i < NumPizza; i++)
                 s += "\r\n" + Pizzas[i].ToString();
-            s += "\r\nTotal Price: " + Price();
+            s += "\r\nTotal Price: $" + Price();
             return s;
         }
 
@@ -154,10 +154,22 @@ namespace PizzaPlanet.Library
             return NumPizza < MaxPizzas && Price() < MaxPrice;
         }
 
-        //possibletodo, format better
+        public string FullDetails()
+        {
+            string ret = "Store: <" + Store.Id + "> Order: <" + Id + "> \r\nAt: <" +
+                Time.ToShortDateString() + " " + Time.Hour + ":" + Time.Minute +
+                ">\r\nBy: <" + Customer.Name + ">\r\n";
+            for (int i = 0; i < NumPizza; i++)
+                ret += Pizzas[i].ToString() + "\r\n";
+            ret+="Total: <$" + Price() + ">";
+            return ret;
+        }
+
         public string Details()
         {
-            string ret = "Store: " + Store.Id + " Order: " + Id + " At: " + Time.ToShortDateString() + " By: " + Customer.Name + " Total: " + Price();
+            string ret = "Store: <" + Store.Id + "> At: <" + 
+                Time.ToShortDateString()+" "+Time.Hour+":"+Time.Minute + 
+                "> By: <" + Customer.Name + "> Total: <$" + Price()+">";
             return ret;
         }
         
