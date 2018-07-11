@@ -144,19 +144,38 @@ namespace PizzaPlanet.Application
                 switch (input)
                 {
                     case '1'://Start order
-                        SelectLocationScreen();
-                        if (CurrentLocation == null)
-                            continue;
+                        bool useLast = false;
                         Order order;
-                        try
+                        if (CurrentUser.LastOrder() != null)
+                            useLast = SuggestOrderScreen(CurrentUser.LastOrder());
+                        if (useLast == false)//old way, no suggestion
                         {
-                            order = new Order(CurrentUser, CurrentLocation);
+                            SelectLocationScreen();
+                            if (CurrentLocation == null)
+                                continue;
+                            try
+                            {
+                                order = new Order(CurrentUser, CurrentLocation);
+                            }
+                            catch (PizzaTooSoonException)
+                            {
+                                int minutes = Math.Max(1, 120 - (int)Math.Truncate((DateTime.Now - CurrentUser.LastOrder().Time).TotalMinutes));
+                                TopMessage = TooSoonMessage + minutes + " minutes";
+                                continue;
+                            }
                         }
-                        catch (PizzaTooSoonException)
+                        else //using the suggestion
                         {
-                            int minutes = Math.Max(1,120-(int)Math.Truncate((DateTime.Now - CurrentUser.LastOrder().Time).TotalMinutes));
-                            TopMessage = TooSoonMessage + minutes + " minutes";
-                            continue;
+                            try
+                            {
+                                order = new Order(CurrentUser.LastOrder());
+                            }
+                            catch (PizzaTooSoonException)
+                            {
+                                int minutes = Math.Max(1, 120 - (int)Math.Truncate((DateTime.Now - CurrentUser.LastOrder().Time).TotalMinutes));
+                                TopMessage = TooSoonMessage + minutes + " minutes";
+                                continue;
+                            }
                         }
                         OrderScreen(order);
                         continue;
@@ -179,6 +198,25 @@ namespace PizzaPlanet.Application
                     default:
                         continue;
                 }
+            }
+        }
+
+        private static readonly string PreviousOrderMessage = "Would you like to order this again?";
+        private static bool SuggestOrderScreen(Order o)
+        {
+            while (true)
+            {
+                TopMessage = PreviousOrderMessage;
+                ClearScreen();
+                System.Console.WriteLine(o.FullDetails());
+                System.Console.WriteLine();
+                System.Console.WriteLine("ENTER : YES");
+                System.Console.WriteLine("ESC : NO");
+                char input = System.Console.ReadKey().KeyChar;
+                if (input == (char)27)
+                    return false;
+                else if (input == (char)13)
+                    return true;
             }
         }
 

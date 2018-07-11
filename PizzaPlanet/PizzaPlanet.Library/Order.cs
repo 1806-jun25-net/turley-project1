@@ -43,7 +43,7 @@ namespace PizzaPlanet.Library
         public int NumPizza { get; private set; }
 
         /// <summary>
-        /// Singular constructor for trying to place a new Order. Pizzas must be added after
+        /// Constructor for trying to place a new Order. Pizzas must be added after
         /// </summary>
         /// <param name="customer"></param>
         /// <param name="store"></param>
@@ -59,6 +59,15 @@ namespace PizzaPlanet.Library
             NumPizza = 0;
             Pizzas = new Pizza[MaxPizzas];
             Id = -1;//denotes the order has not been placed
+        }
+        /// <summary>
+        /// Attempts to create a new order from a previous template
+        /// </summary>
+        /// <param name="temp"></param>
+        public Order(Order temp): this(temp.Customer,temp.Store)
+        {
+            for (int i = 0; i < temp.NumPizza; i++)
+                AddPizza(temp.Pizzas[i]);
         }
 
         /// <summary>
@@ -156,7 +165,7 @@ namespace PizzaPlanet.Library
 
         public string FullDetails()
         {
-            string ret = "Store: <" + Store.Id + "> Order: <" + Id + "> \r\nAt: <" +
+            string ret = "Store: <" + Store.Id + "> Order: <" + Id + "> \r\nTime: <" +
                 Time.ToShortDateString() + " " + Time.Hour + ":" + Time.Minute +
                 ">\r\nBy: <" + Customer.Name + ">\r\n";
             for (int i = 0; i < NumPizza; i++)
@@ -167,7 +176,7 @@ namespace PizzaPlanet.Library
 
         public string Details()
         {
-            string ret = "Store: <" + Store.Id + "> At: <" + 
+            string ret = "Store: <" + Store.Id + "> Time: <" + 
                 Time.ToShortDateString()+" "+Time.Hour+":"+Time.Minute + 
                 "> By: <" + Customer.Name + "> Total: <$" + Price()+">";
             return ret;
