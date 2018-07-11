@@ -54,7 +54,7 @@ Select* from Pizza;
 Select* from PizzaUser;
 
 --Some stores to populate store with
-Insert Into Store Values(101,0,1,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500);
-Insert Into Store Values(723,0,1,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500);
-Insert Into Store Values(988,0,1,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500);
-Insert Into Store Values(999,0,1,0,0,0,0,0,0,0,0,0,0,0,0);
+--Insert Into Store Values(101,0,1,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500);
+--Insert Into Store Values(723,0,1,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500);
+--Insert Into Store Values(988,0,1,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500);
+--Insert Into Store Values(999,0,1,0,0,0,0,0,0,0,0,0,0,0,0); -- empty store 999

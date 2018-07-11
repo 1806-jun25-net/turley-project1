@@ -83,7 +83,7 @@ namespace PizzaPlanet.Application
                 CurrentUser = User.TryUser(name);
                 if (CurrentUser != null)   //found user
                 {
-                    TopMessage = "Welcome, " + CurrentUser.Name;
+                    TopMessage = "Welcome back, " + CurrentUser.Name;
                     WhatNextScreen();
                 }
                 else //no user by that name
@@ -102,6 +102,7 @@ namespace PizzaPlanet.Application
                         {
                             case '1'://New User
                                 CurrentUser = User.MakeUser(name);
+                                TopMessage = "Welcome, " + CurrentUser.Name;
                                 WhatNextScreen();
                                 what = false;
                                 break;
@@ -621,7 +622,7 @@ namespace PizzaPlanet.Application
                 //topping 11
                 else if (input == '0')
                 {
-                    topping = 11;
+                    topping = -11;
                 }
                 //toppings 12+. MaxTopping = Length -1
                 else if (input >= 'a' && input <= ('a' + (PZ.ToppingTypes.Length-1)-12))

@@ -169,7 +169,7 @@ namespace PizzaPlanet.Library
         public string FullDetails()
         {
             string ret = "Store: <" + Store.Id + "> Order: <" + Id + "> \r\nTime: <" +
-                Time.ToShortDateString() + " " + Time.Hour + ":" + Time.Minute +
+                Time.ToShortDateString() + " " + (Time.Hour / 10) + "" + (Time.Hour % 10) + ":" + (Time.Minute/10)  +""+(Time.Minute % 10) +
                 ">\r\nBy: <" + Customer.Name + ">\r\n";
             for (int i = 0; i < NumPizza; i++)
                 ret += Pizzas[i].ToString() + "\r\n";
@@ -180,7 +180,7 @@ namespace PizzaPlanet.Library
         public string Details()
         {
             string ret = "Store: <" + Store.Id + "> Time: <" + 
-                Time.ToShortDateString()+" "+Time.Hour+":"+Time.Minute + 
+                Time.ToShortDateString()+" " + (Time.Hour / 10) + "" + (Time.Hour % 10) + ":" + (Time.Minute / 10) + "" + (Time.Minute % 10) +
                 "> By: <" + Customer.Name + "> Total: <$" + Price()+">";
             return ret;
         }
