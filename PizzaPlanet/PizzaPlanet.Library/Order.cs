@@ -51,8 +51,11 @@ namespace PizzaPlanet.Library
         {
             var LastOrder = customer.LastOrder();
             //order fails if customer placed too soon
-            if (LastOrder.Store.Id == store.Id && (DateTime.Now - LastOrder.Time).TotalMinutes < TimeBetweenOrders)
-                throw new PizzaTooSoonException("User has ordered from this store too recently.");
+            if (LastOrder != null)
+            {
+                if (LastOrder.Store.Id == store.Id && (DateTime.Now - LastOrder.Time).TotalMinutes < TimeBetweenOrders)
+                    throw new PizzaTooSoonException("User has ordered from this store too recently.");
+            }
             Store = store;
             Customer = customer;
             Time = DateTime.MinValue;

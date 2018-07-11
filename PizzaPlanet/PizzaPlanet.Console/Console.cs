@@ -191,6 +191,7 @@ namespace PizzaPlanet.Application
                     case '4'://logout
                         {
                             TopMessage = WelcomeMessage;
+                            CurrentUser = null;
                             return;
                         }
                     case (char)27:
@@ -399,10 +400,16 @@ namespace PizzaPlanet.Application
                 switch (input)
                 {
                     case '1':
-                        if(order.CanAddPizza())
+                        if (order.CanAddPizza())
+                        {
                             pizza = CreatePizzaScreen();
-                        if (pizza != null)
-                            order.AddPizza(pizza);
+                            if (pizza != null)
+                                order.AddPizza(pizza);
+                        }
+                        else
+                        {
+                            TopMessage = "Cannot add pizza: Order is full";
+                        }
                         continue;
                     case '3': //Change Location
                         SelectLocationScreen();

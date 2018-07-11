@@ -1,8 +1,10 @@
 --Drops for resetting
+/*
 DROP TABLE Pizza;
 DROP TABLE PizzaOrder;
 DROP TABLE PizzaUser;
 DROP TABLE Store;
+*/
 
 --Creations
 Create TABLE Store(
@@ -55,3 +57,4 @@ Select* from PizzaUser;
 Insert Into Store Values(101,0,1,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500);
 Insert Into Store Values(723,0,1,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500);
 Insert Into Store Values(988,0,1,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500);
+Insert Into Store Values(999,0,1,0,0,0,0,0,0,0,0,0,0,0,0);
