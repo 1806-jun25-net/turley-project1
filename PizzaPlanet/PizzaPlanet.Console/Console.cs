@@ -5,6 +5,7 @@ using PizzaPlanet.Library;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using PZ = PizzaPlanet.Library.Pizza;
@@ -125,13 +126,15 @@ namespace PizzaPlanet.Application
         //private static readonly string BadInputMessage = "Hm? Please try again";
         private static readonly string[] WhatNextCommands = {
             "Start an Order",
-            "View Order History",
+            "View your Order History",
+            "View Order History for a Store",
             "Logout"
         };
         static void WhatNextScreen()
         {
             while (true)
             {
+                CurrentLocation = null;
                 ClearScreen();
                 System.Console.WriteLine(WhatNextMessage);
                 for (int i = 0; i < WhatNextCommands.Length; i++)
@@ -142,6 +145,8 @@ namespace PizzaPlanet.Application
                 {
                     case '1'://Start order
                         SelectLocationScreen();
+                        if (CurrentLocation == null)
+                            continue;
                         Order order;
                         try
                         {
@@ -155,10 +160,18 @@ namespace PizzaPlanet.Application
                         }
                         OrderScreen(order);
                         continue;
-                    case '3'://logout
+                    case '2'://OrderHistory for you
+                        OrderHistoryScreen(CurrentUser.Orders());
+                        continue;
+                    case '3'://ORderhistory for a store
+                        SelectLocationScreen();
+                        if (CurrentLocation == null)
+                            continue;
+                        OrderHistoryScreen(CurrentLocation.Orders());
+                        continue;
+                    case '4'://logout
                         {
-                            TopMessage = 
-                                WelcomeMessage;
+                            TopMessage = WelcomeMessage;
                             return;
                         }
                     case (char)27:
@@ -168,6 +181,128 @@ namespace PizzaPlanet.Application
                 }
             }
         }
+
+        private static readonly string NoOrdersMessage = "No orders found...";
+        private static void OrderHistoryScreen(IEnumerable<Order> orders)
+        {
+            if (orders == null)
+            {
+                TopMessage = NoOrdersMessage;
+                return;
+            }
+            else if (!orders.Any())
+            {
+                TopMessage = NoOrdersMessage;
+                return;
+            }
+            else
+            {
+                int maxLines = 10;// max we will display in 1 page
+                Order[] arr = orders.ToArray();
+                int last = arr.Length-1;
+                int start = 0; //starting [] to display
+                int finish = Math.Min(maxLines - 1, last); //final [] to display
+                string currentSort = "most recent";
+                while (true)
+                {
+                    TopMessage = "Sorted by " + currentSort;
+                    ClearScreen();
+                    bool less = start > 0;//less to display (previous)
+                    bool more = finish < last;//more to display
+                    for(int i = start; i < finish; i++)
+                        System.Console.WriteLine((char)('1' + i - start) + " : " + arr[i].Details());
+                    if(finish == start + 9)
+                        System.Console.WriteLine('0' + " : " + arr[finish].Details());
+                    else
+                        System.Console.WriteLine((finish-start+1) + " : " + arr[finish].Details());
+                    if (less)
+                        System.Console.WriteLine('[' + " : View Previous Entries");
+                    if (more)
+                        System.Console.WriteLine(']' + " : View Next Entries");
+                    System.Console.WriteLine("c : Change Order Sorting");
+                    System.Console.WriteLine("ESC : Return");
+                    char input = System.Console.ReadKey().KeyChar;
+                    if (input >= '1' && input <= '9' && (input - '1') <= (finish - start))
+                        ShowOrderDetailsScreen(arr[input - '1' + start]);
+                    else if (input == '0' && finish == start + 9)
+                        ShowOrderDetailsScreen(arr[finish]);
+                    else if (input == (char)27)
+                        return;
+                    else if (more && input == ']')
+                    {
+                        start = start + maxLines;
+                        finish = Math.Min(start + maxLines-1, last);
+                    }
+                    else if (less && input == '[')
+                    {
+                        start = start - maxLines;
+                        finish = start+maxLines-1;
+                    }
+                    else if (input == 'c')
+                    {
+                        string nextSort = ChangeSortingScreen(currentSort);
+                        if (nextSort == currentSort)
+                            continue;
+                        else
+                        {
+                            switch (nextSort)
+                            {
+                                case "most recent":
+                                    arr = orders.OrderBy(o => (DateTime.Now - o.Time)).ToArray();
+                                    break;
+                                case "oldest":
+                                    arr = orders.OrderBy(o => o.Time).ToArray();
+                                    break;
+                                case "most expensive":
+                                    arr = orders.OrderBy(o => (Order.MaxPrice - o.Price())).ToArray();
+                                    break;
+                                case "least expensive":
+                                    arr = orders.OrderBy(o => o.Price()).ToArray();
+                                    break;
+                            }
+                            start = 0;
+                            finish = Math.Min(maxLines - 1, last);
+                            currentSort = nextSort;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        private static readonly string[] SortingOptions = { "most recent", "oldest", "most expensive", "least expensive" };
+        static string ChangeSortingScreen(string current)
+        {
+            while(true)
+            {
+                TopMessage = "Sorted by " + current;
+                ClearScreen();
+                System.Console.WriteLine("Select from the following:");
+                for (int i = 0; i < SortingOptions.Length; i++)
+                    System.Console.WriteLine((i + 1) + " : " + SortingOptions[i]);
+                System.Console.WriteLine("ESC : Cancel");
+                char input = System.Console.ReadKey().KeyChar;
+                if (input - '1' < SortingOptions.Length)
+                    return SortingOptions[input - '1'];
+                else if (input == 27)
+                    return current;
+            }
+        }
+
+        static void ShowOrderDetailsScreen(Order o)
+        {
+            while (true)
+            {
+                ClearScreen();
+                System.Console.WriteLine(o.ToString());
+                System.Console.WriteLine("ESC : Return");
+                char input = System.Console.ReadKey().KeyChar;
+                if (input == (char)27)
+                    return;
+            }
+
+        }
+    
 
        //static readonly string DefaultLocationMesage = "Use saved location?";
        static readonly string ChooseLocationMessage = "Please select location:";

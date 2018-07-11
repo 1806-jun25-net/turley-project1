@@ -153,6 +153,13 @@ namespace PizzaPlanet.Library
         {
             return NumPizza < MaxPizzas && Price() < MaxPrice;
         }
+
+        //possibletodo, format better
+        public string Details()
+        {
+            string ret = "Store: " + Store.Id + " Order: " + Id + " At: " + Time.ToShortDateString() + " By: " + Customer.Name + " Total: " + Price();
+            return ret;
+        }
         
     }
 }

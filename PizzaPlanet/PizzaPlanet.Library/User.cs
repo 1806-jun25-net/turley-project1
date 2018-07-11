@@ -113,7 +113,9 @@ namespace PizzaPlanet.Library
         public Order LastOrder()
         {
             var orders = Orders();
-            if (orders == null || orders.Count() == 0)
+            if (orders == null)
+                return null;
+            else if (!orders.Any())
                 return null;
             else return Orders().First();
         }
