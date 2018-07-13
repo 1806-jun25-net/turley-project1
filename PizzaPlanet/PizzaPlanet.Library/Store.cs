@@ -6,20 +6,20 @@ using System.Text;
 namespace PizzaPlanet.Library
 {
     
-    public class Location
+    public class Store
     {
-        private static IEnumerable<Location> LocationsReal = null;
+        private static IEnumerable<Store> StoresReal = null;
 
-        public static IEnumerable<Location> Locations()
+        public static IEnumerable<Store> Stores()
         {
-            if (LocationsReal == null)
-                LocationsReal = PizzaRepository.Repo().GetLocations();
-            return LocationsReal;
+            if (StoresReal == null)
+                StoresReal = PizzaRepository.Repo().GetStores();
+            return StoresReal;
         }
 
-        public static Location GetLocation(int id)
+        public static Store GetStore(int id)
         {
-            foreach (Location loc in Locations())
+            foreach (Store loc in Stores())
             {
                 if (loc.Id == id)
                     return loc;
@@ -28,13 +28,13 @@ namespace PizzaPlanet.Library
         }
 
         //temp for location creation
-        public static IEnumerable<Location> LoadLocationsTemp()
+        public static IEnumerable<Store> LoadStoresTemp()
         {
-            var LocationsTemp = new List<Location>();
-            LocationsTemp.Add(new Location(101));
-            LocationsTemp.Add(new Location(723));
-            LocationsTemp.Add(new Location(988));
-            foreach (Location loc in LocationsReal)
+            var LocationsTemp = new List<Store>();
+            LocationsTemp.Add(new Store(101));
+            LocationsTemp.Add(new Store(723));
+            LocationsTemp.Add(new Store(988));
+            foreach (Store loc in StoresReal)
                 loc.FullInventory();
             return LocationsTemp;
         }
@@ -114,7 +114,7 @@ namespace PizzaPlanet.Library
         /// Creates new Location with given Id (Store Number) and empty orderhistory and empty inventory
         /// </summary>
         /// <param name="i"></param>
-        public Location(int id)
+        public Store(int id)
         {
             if (id < 100 || id > 999)
                 throw new ArgumentException("Input out of range, store number must be 3 digits");

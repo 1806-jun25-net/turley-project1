@@ -8,12 +8,12 @@ namespace PizzaPlanet.Testing
     {
         private static int LargeHandCheese = 162;
         private static int MaxPizza = (int)Math.Pow(2, 24) - 1 - 4 - 1;
-        private static Location TestLoc;
+        private static Store TestLoc;
         private static int StoreNum = 100;
         private static User user;
         private static void SetUp()
         {
-            TestLoc = new Location(StoreNum);
+            TestLoc = new Store(StoreNum);
             user = new User("test");
             TestLoc.FullInventory();
         }

@@ -6,11 +6,11 @@ namespace PizzaPlanet.Testing
 {
     public class LocationTest
     {
-        private static Location TestLoc;
+        private static Store TestLoc;
 
         private static void SetUp()
         {
-            TestLoc = new Location(100);
+            TestLoc = new Store(100);
             TestLoc.FullInventory();
         }
 

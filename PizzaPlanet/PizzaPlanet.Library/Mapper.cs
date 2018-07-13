@@ -6,9 +6,9 @@ namespace PizzaPlanet.Library
 {
     public static class Mapper
     {
-        public static Location Map(DBData.Store store)
+        public static Store Map(DBData.Store store)
         {
-            Location loc = new Location(store.Id);
+            Store loc = new Store(store.Id);
             //inventory
             loc.Dough = store.Dough.Value;
             loc.Toppings[(int)Pizza.ToppingType.Bacon] = store.Bacon.Value;
@@ -29,7 +29,7 @@ namespace PizzaPlanet.Library
             return loc;
         }
 
-        public static DBData.Store Map(Location loc)
+        public static DBData.Store Map(Store loc)
         {
             DBData.Store store = new DBData.Store
             {
@@ -59,7 +59,7 @@ namespace PizzaPlanet.Library
             if (user.StoreId == -1)
                 u = new User(user.Username);
             else
-                u = new User(user.Username, Location.GetLocation(user.StoreId));
+                u = new User(user.Username, Store.GetStore(user.StoreId));
             return u;
         }
 
@@ -78,7 +78,7 @@ namespace PizzaPlanet.Library
         {
             Order o = new Order(
                 User.TryUser(order.Username), 
-                Location.GetLocation(order.StoreId),
+                Store.GetStore(order.StoreId),
                 order.OrderTime,
                 (int)Math.Truncate(order.Id)
                 );
@@ -105,12 +105,12 @@ namespace PizzaPlanet.Library
         }
 
         //below are for multiple at once (through IEnumerables)
-        public static IEnumerable<Location> Map(IEnumerable<DBData.Store> stores)
+        public static IEnumerable<Store> Map(IEnumerable<DBData.Store> stores)
         {
             return stores.Select(Map);
         }
 
-        public static IEnumerable<DBData.Store> Map(IEnumerable<Location> locations)
+        public static IEnumerable<DBData.Store> Map(IEnumerable<Store> locations)
         {
            return locations.Select(Map);
         }

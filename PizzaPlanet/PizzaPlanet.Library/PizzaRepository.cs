@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using PizzaPlanet.DBData;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace PizzaPlanet.Library
@@ -25,18 +27,19 @@ namespace PizzaPlanet.Library
         public static PizzaRepository Repo()
         {
             if (RepoReal == null)
-                throw new Exception("Repository never instantiated.");
+            {
+                var configBuilder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                IConfigurationRoot configuration = configBuilder.Build();
+                var optionsBuilder = new DbContextOptionsBuilder<Project1PizzaPlanetContext>();
+                optionsBuilder.UseSqlServer(configuration.GetConnectionString("PizzaPlanet"));
+                var options = optionsBuilder.Options;
+                RepoReal = new PizzaRepository(new Project1PizzaPlanetContext(options));
+            }
             return RepoReal;
         }
-
-        /// <summary>
-        /// instantiates the real repository with the given context
-        /// </summary>
-        /// <param name="db"></param>
-        public static void OpenRepository(Project1PizzaPlanetContext db)
-        {
-            RepoReal = new PizzaRepository(db);
-        }
+        
 
         private PizzaRepository(Project1PizzaPlanetContext db)
         {
@@ -47,7 +50,7 @@ namespace PizzaPlanet.Library
         /// Get all stores/locations
         /// </summary>
         /// <returns>The collection of Locations (stores)</returns>
-        public IEnumerable<Location> GetLocations()
+        public IEnumerable<Store> GetStores()
         {
             // disable pointless tracking for performance
             return Mapper.Map(_db.Store.AsNoTracking().ToList());

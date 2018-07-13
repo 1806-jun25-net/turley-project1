@@ -26,7 +26,7 @@ namespace PizzaPlanet.Web.Controllers
         {
             ViewData["Message"] = "Your contact page.";
 
-            return View();
+            return View("About");
         }
 
         public IActionResult Privacy()

@@ -22,34 +22,18 @@ namespace PizzaPlanet.Application
 
         private static User CurrentUser = null;
         //Set to null to denote no location has been selected yet
-        private static Location CurrentLocation = null;
+        private static Library.Store CurrentLocation = null;
         private static string TopMessage = "";
 
         public static void StartScreen()
         {
-            OpenDB();
             //System.Console.WriteLine(Logo);
             //System.Console.WriteLine(PressEnterMessage);
             //System.Console.ReadLine();
             TopMessage = WelcomeMessage;
             LoginScreen();
         }
-
-        /// <summary>
-        /// Opens the database access using PizzaRepository
-        /// </summary>
-        static void OpenDB()
-        {
-            var configBuilder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            IConfigurationRoot configuration = configBuilder.Build();
-            var optionsBuilder = new DbContextOptionsBuilder<Project1PizzaPlanetContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("PizzaPlanet"));
-            var options = optionsBuilder.Options;
-            PizzaRepository.OpenRepository(new Project1PizzaPlanetContext(options));
-        }
-
+        
         static void ClearScreen()
         {
             System.Console.Clear();
@@ -357,7 +341,7 @@ namespace PizzaPlanet.Application
                 ClearScreen();
                 System.Console.WriteLine(ChooseLocationMessage);
                 List<int> ids = new List<int>();
-                foreach (Location loc in Location.Locations())
+                foreach (Library.Store loc in Library.Store.Stores())
                     ids.Add(loc.Id);
                 ids.Sort();
                 for (int i = 0; i < ids.Count; i++)
@@ -368,7 +352,7 @@ namespace PizzaPlanet.Application
                 char input = System.Console.ReadKey().KeyChar;
                 if (input > '0' && input <= '0' + ids.Count)
                 {
-                    CurrentLocation = Location.GetLocation(ids[input - '1']);
+                    CurrentLocation = Library.Store.GetStore(ids[input - '1']);
                     return;
                 }
                 else if (input == 27)

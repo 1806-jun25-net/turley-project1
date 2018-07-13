@@ -11,7 +11,7 @@ namespace PizzaPlanet.Library
         /// <summary>
         /// Store the order is placed at.
         /// </summary>
-        public Location Store { get; set; }
+        public Store Store { get; set; }
 
         /// <summary>
         /// Order number with the store. -1 if unplaced
@@ -47,7 +47,7 @@ namespace PizzaPlanet.Library
         /// </summary>
         /// <param name="customer"></param>
         /// <param name="store"></param>
-        public Order(User customer, Location store)
+        public Order(User customer, Store store)
         {
             var LastOrder = customer.LastOrder();
             //order fails if customer placed too soon
@@ -80,7 +80,7 @@ namespace PizzaPlanet.Library
         /// <param name="store"></param>
         /// <param name="orderTime"></param>
         /// <param name="id"></param>
-        public Order(User customer, Location store, DateTime orderTime, int id)
+        public Order(User customer, Store store, DateTime orderTime, int id)
         {
             Store = store;
             Customer = customer;

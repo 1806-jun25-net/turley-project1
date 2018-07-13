@@ -73,7 +73,7 @@ namespace PizzaPlanet.Library
         /// <summary>
         /// User's chosen Default Location for ordering. Null until set
         /// </summary>
-        public Location DefLocation { get; set; }
+        public Store DefLocation { get; set; }
 
         /// <summary>
         /// User's Orders, sorted by time placed (newest first)
@@ -100,7 +100,7 @@ namespace PizzaPlanet.Library
             OrdersReal = null;
         }
 
-        public User(string name, Location defLocation) : this(name)
+        public User(string name, Store defLocation) : this(name)
         {
             DefLocation = defLocation;
 

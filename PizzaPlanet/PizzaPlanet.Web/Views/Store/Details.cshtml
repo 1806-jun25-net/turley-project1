@@ -1,0 +1,102 @@
+﻿@model PizzaPlanet.DBData.Store
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Store</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Income)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Income)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NextOrder)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NextOrder)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Dough)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Dough)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Sauce)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Sauce)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Cheese)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Cheese)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Pepperoni)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Pepperoni)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Sausage)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Sausage)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Ham)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Ham)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Bacon)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Bacon)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Beef)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Beef)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Onion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Onion)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GreenPepper)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GreenPepper)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Mushroom)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Mushroom)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BlackOlive)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BlackOlive)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

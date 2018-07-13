@@ -12,6 +12,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzaPlanet.Testing", "PizzaPlanet.Testing\PizzaPlanet.Testing.csproj", "{A266475B-3B13-453F-86EF-8FE87F5997BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaPlanet.Web", "PizzaPlanet.Web\PizzaPlanet.Web.csproj", "{1B82D6DE-DBF1-4850-9F20-5CD57C0B740C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2F101547-8656-4BAC-A258-2C5666BC723B} = {2F101547-8656-4BAC-A258-2C5666BC723B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
