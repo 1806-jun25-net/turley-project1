@@ -1,9 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using PizzaPlanet.Web;
+@{ var user = PizzaPlanet.Web.Controllers.UserController.user;}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pizza Planet! - @ViewData["Title"]</title>
+    <title>Pizza Planet - @ViewData["Title"]</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -19,28 +21,44 @@
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            @*<div class="navbar-header">
+            <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Home</a>
-                 </div> *@
+            </div>
 
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><div class="headbtn">
-    <a asp-area="" asp-controller="Home" asp-action="Contact">Order Pizza</a>
-</div></li>
+                    <li>
+                        <div class="headbtn">
+                            <a asp-area="" asp-controller="Order" asp-action="Create">Order Pizza</a>
+                        </div>
+                    </li>
                     <li>
                         <div class="dropdown">
                             <button class="headbtn">View Order History</button>
                             <div class="dropdown-content">
-                                <a asp-area="" asp-controller="Home" asp-action="Contact">For Yourself</a>
-                                <a asp-area="" asp-controller="Home" asp-action="Contact">By Location</a>
+                                <a asp-area="" asp-controller="Order" asp-action="HistoryUser">For Yourself</a>
+                                <a asp-area="" asp-controller="Order" asp-action="HistoryStore">By Location</a>
                             </div>
+                        </div>
+                    </li>
+                    <li>
+                        @if (user != null)
+                        {<div>@user.Name</div>}
+                        else{ <div></div> }
+                    </li>
+                    <li>
+                        <div class="headbtn" align="right">
+                            <a asp-area="" asp-controller="Home" asp-action="Logout">
+                                @if (user == null)
+                                {<div>Login</div>}
+                                else
+                                { <div>Logout</div>}
+                            </a>
                         </div>
                     </li>
                 </ul>

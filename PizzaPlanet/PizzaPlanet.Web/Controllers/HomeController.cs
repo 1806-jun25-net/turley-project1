@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using PizzaPlanet.DBData;
+using PizzaPlanet.Library;
 using PizzaPlanet.Web.Models;
 
 namespace PizzaPlanet.Web.Controllers
@@ -14,24 +16,31 @@ namespace PizzaPlanet.Web.Controllers
         {
             return View();
         }
-
-        public IActionResult About()
+        public IActionResult Login()
         {
-            ViewData["Message"] = "Your application description page.";
-
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Login([Bind("Username,StoreId")] PizzaUser pizzaUser)
+        {
+            var tryUser = PizzaPlanet.Library.User.TryUser(pizzaUser.Username);
+            if (tryUser != null)
+            {
+                PizzaPlanet.Web.Controllers.UserController.user = tryUser;
+                return View("Index");
+            }
             return View();
         }
 
-        public IActionResult Contact()
+        public IActionResult Logout()
         {
-            ViewData["Message"] = "Your contact page.";
-
-            return View("About");
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            if (UserController.user != null)
+            {
+                ViewData["Message"] = "<" + UserController.user.Name + "> is now logged out!";
+                UserController.user = null;
+            }
+            return View("Login");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
