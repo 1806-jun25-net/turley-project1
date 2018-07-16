@@ -12,10 +12,10 @@ namespace PizzaPlanet.Library
         public enum SizeType { Small=2, Medium, Large}
         public enum Amount { No, Light, Regular, Extra}
 
-        public static string[] Sizes = Enum.GetNames(typeof(SizeType));
-        public static string[] CrustTypes = Enum.GetNames(typeof(CrustType));
-        public static string[] ToppingTypes = Enum.GetNames(typeof(ToppingType));
-        public static string[] Amounts = Enum.GetNames(typeof(Amount));
+        public static readonly string[] Sizes = Enum.GetNames(typeof(SizeType));
+        public static readonly string[] CrustTypes = Enum.GetNames(typeof(CrustType));
+        public static readonly string[] ToppingTypes = Enum.GetNames(typeof(ToppingType));
+        public static readonly string[] Amounts = Enum.GetNames(typeof(Amount));
 
         /// <summary>
         /// Transforms Amount enum to usable double modifier.
@@ -187,6 +187,35 @@ namespace PizzaPlanet.Library
                 }
             }
             return Math.Round(price,2);
+        }
+
+        public string ToppingsString()
+        {
+            string ret = "";
+            bool first = true;
+            for(int i = (int)ToppingType.Pepperoni; i < Toppings.Length; i++)
+            {
+                string next = "";
+                if (!first) next = ", ";
+                switch (Toppings[i])
+                {
+                    case Amount.No:
+                        continue;
+                    case Amount.Extra:
+                        next += "(Extra) ";
+                            break;
+                    case Amount.Light:
+                        next += "(Light) ";
+                        break;
+                    case Amount.Regular:
+                        break;
+                }
+                first = false;
+                next += ToppingTypes[i];
+                ret += next;
+            }
+
+            return ret;
         }
 
         //public override bool Equals(object obj)

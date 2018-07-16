@@ -1,12 +1,12 @@
 ﻿@model PizzaPlanet.DBData.PizzaUser
 @{
-    ViewData["Title"] = "Login:";
+    ViewData["Title"] = "Create a new user:";
 }
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
 <div>
-    <form asp-action="Login">
+    <form asp-action="NewUser">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="Username" class="control-label"></label>
@@ -14,10 +14,7 @@
             <span asp-validation-for="Username" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="submit" value="Login" class="btn btn-default" />
+            <input type="submit" value="Create User" class="btn btn-default" />
         </div>
     </form>
 </div>
-<p>
-    <a asp-area="" asp-controller="Home" asp-action="NewUser">Create New User</a>
-</p>

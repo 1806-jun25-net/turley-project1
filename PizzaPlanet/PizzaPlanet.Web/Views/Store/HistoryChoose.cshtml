@@ -1,0 +1,22 @@
+﻿@model IEnumerable<PizzaPlanet.DBData.Store>
+@{
+    ViewData["Title"] = "Order History By Location";
+}
+
+<h2>Order History By Location</h2>
+<h3>
+
+<dl class="dl-horizontal">
+    @foreach (var item in Model)
+    {
+            <dt>
+                @Html.DisplayFor(modelItem => item.Id)
+            </dt>
+            <dd>
+                <a asp-controller="Store" asp-action="History" asp-route-id="@item.Id">View History</a>
+            </dd>
+    }
+    </dl>
+    </h3>
+
+

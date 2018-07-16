@@ -41,24 +41,18 @@
                         <div class="dropdown">
                             <button class="headbtn">View Order History</button>
                             <div class="dropdown-content">
-                                <a asp-area="" asp-controller="Order" asp-action="HistoryUser">For Yourself</a>
-                                <a asp-area="" asp-controller="Order" asp-action="HistoryStore">By Location</a>
+                                <a asp-area="" asp-controller="Store" asp-action="HistoryChoose">For a Location</a>
+                                @if (user != null)
+                                {<a asp-area="" asp-controller="User" asp-action="History">For Yourself</a>}
                             </div>
                         </div>
                     </li>
                     <li>
-                        @if (user != null)
-                        {<div>@user.Name</div>}
-                        else{ <div></div> }
-                    </li>
-                    <li>
-                        <div class="headbtn" align="right">
-                            <a asp-area="" asp-controller="Home" asp-action="Logout">
-                                @if (user == null)
-                                {<div>Login</div>}
-                                else
-                                { <div>Logout</div>}
-                            </a>
+                        <div class="headbtn">
+                            @if (user == null)
+                            {<a asp-area="" asp-controller="Home" asp-action="Login">Login</a> }
+                            else
+                            { <a asp-area="" asp-controller="User" asp-action="Index">@user.Name</a>}
                         </div>
                     </li>
                 </ul>

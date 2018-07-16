@@ -12,6 +12,7 @@ namespace PizzaPlanet.Web
     public class StoreController : Controller
     {
         private readonly Project1PizzaPlanetContext _context;
+        private static string LastSort = "Most Recent";
 
         public StoreController(Project1PizzaPlanetContext context)
         {
@@ -22,6 +23,45 @@ namespace PizzaPlanet.Web
         public async Task<IActionResult> Index()
         {
             return View(await _context.Store.ToListAsync());
+        }
+
+        public async Task<IActionResult> HistoryChoose()
+        {
+            return View(await _context.Store.ToListAsync());
+        }
+
+        //private static readonly string[] sorts = { "Most Recent", "Least Recent", "Most Expensive", "Least Expensive" };
+        public async Task<IActionResult> History(int? id, string sort = "")
+        {
+            if (sort == "")
+                sort = LastSort;
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var store = await _context.Store
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (store == null)
+            {
+                return NotFound();
+            }
+            LastSort = sort;
+            ViewData["Sort"] = sort;
+            ViewData["Store"] = id;
+            switch (sort)
+            {
+                case "Most Recent":
+                    return View(await _context.PizzaOrder.Where(o => (o.StoreId == id)).OrderBy(o => (DateTime.Now - o.OrderTime)).ToListAsync());
+                case "Least Recent":
+                    return View(await _context.PizzaOrder.Where(o => (o.StoreId == id)).OrderBy(o => o.OrderTime).ToListAsync());
+                case "Most Expensive":
+                    return View(await _context.PizzaOrder.Where(o => (o.StoreId == id)).OrderBy(o => (500 - o.Total)).ToListAsync());
+                case "Least Expensive":
+                    return View(await _context.PizzaOrder.Where(o => (o.StoreId == id)).OrderBy(o => o.Total).ToListAsync());
+                default:
+                    break;
+            }
+            return View(await _context.PizzaOrder.Where(o => (o.StoreId == id)).OrderBy(o => o.OrderTime).ToListAsync());
         }
 
         // GET: Store/Details/5

@@ -1,42 +1,97 @@
-﻿@model PizzaPlanet.DBData.PizzaOrder
+﻿@model PizzaPlanet.Library.Order
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Order Details";
 }
 
-<h2>Details</h2>
+<h2>@ViewData["Title"]</h2>
 
 <div>
-    <h4>PizzaOrder</h4>
+    <h4>Order @Model.IdFull()</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.OrderTime)
+            Order Time
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.OrderTime)
+            @Html.DisplayFor(model => model.Time)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Total)
+            Total
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Total)
+            $@Model.Price()
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Store)
+            Store
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Store.Id)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.UsernameNavigation)
+            Customer
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.UsernameNavigation.Username)
+            @Html.DisplayFor(model => model.Customer.Name)
         </dd>
     </dl>
 </div>
+<h3>Pizzas</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Size
+            </th>
+            <th>
+                Crust
+            </th>
+            <th>
+                Sauce
+            </th>
+            <th>
+                Cheese
+            </th>
+            <th>Topppings</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Pizzas)
+        {
+            @if (item == null) { continue; }
+            <tr>
+                <td>
+                    @item.Size.ToString()
+                </td>
+                <td>
+                    @item.Crust.ToString()
+                </td>
+                <td>
+                    @item.Toppings[0].ToString()
+                </td>
+                <td>
+                    @item.Toppings[1].ToString()
+                </td>
+                <td>
+                    @{var tops = item.ToppingsString();}
+                    @if (tops != "")
+                    {
+                        @tops
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if ((bool)ViewData["Previous"])
+    {
+        <a asp-controller="User" asp-action="History">Back to List</a>
+    }
+    else
+    {
+        <a asp-controller="Store" asp-action="History" asp-route-id ="@Model.Store.Id">Back to List</a>
+    }
 </div>

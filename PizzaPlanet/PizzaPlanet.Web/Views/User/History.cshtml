@@ -1,0 +1,58 @@
+﻿@model IEnumerable<PizzaPlanet.DBData.PizzaOrder>
+
+@{
+    ViewData["Title"] = "Your Order History";
+    string sort = (string)ViewData["Sort"];
+    string[] sorts = { "Most Recent", "Oldest", "Most Expensive", "Least Expensive" };
+}
+
+<h2>@ViewData["Title"]</h2>
+<h4>
+    Sort by: <select name="sort" form="changesort">
+        <option value="@sort">@sort</option>
+        @foreach (string s in sorts)
+        {
+            @if (s == sort) { continue; }
+            <option value="@s">@s</option>
+        }
+    </select>
+</h4>
+
+<form id="changesort" asp-action="History" asp-route-id="@ViewData["Store"]">
+    <button type="submit" value="Change Sort" class="btn btn-default">Change Sort</button>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
+            <th>
+                Store @*@Html.DisplayNameFor(model => model.StoreId)*@
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderTime)
+                </td>
+                <td>
+                    $@Html.DisplayFor(modelItem => item.Total)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StoreId)
+                </td>
+                <td>
+                    <a asp-controller="Order" asp-action="Details" asp-route-id="@item.Id" asp-route-user="@true">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -16,6 +16,8 @@ namespace PizzaPlanet.Web.Controllers
         {
             return View();
         }
+        
+
         public IActionResult Login()
         {
             return View();
@@ -28,10 +30,32 @@ namespace PizzaPlanet.Web.Controllers
             if (tryUser != null)
             {
                 PizzaPlanet.Web.Controllers.UserController.user = tryUser;
-                return View("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View();
         }
+
+        public IActionResult NewUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult NewUser([Bind("Username,StoreId")] PizzaUser pizzaUser)
+        {
+            var tryUser = PizzaPlanet.Library.User.TryUser(pizzaUser.Username);
+            if (tryUser == null)
+            {
+                PizzaPlanet.Web.Controllers.UserController.user = PizzaPlanet.Library.User.MakeUser(pizzaUser.Username);
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["Message"] = "Username <" + pizzaUser.Username + "> already exists!";
+            return View();
+        }
+
+        //return RedirectToAction(nameof(Index));
+
 
         public IActionResult Logout()
         {
@@ -40,7 +64,7 @@ namespace PizzaPlanet.Web.Controllers
                 ViewData["Message"] = "<" + UserController.user.Name + "> is now logged out!";
                 UserController.user = null;
             }
-            return View("Login");
+            return RedirectToAction(nameof(Login));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

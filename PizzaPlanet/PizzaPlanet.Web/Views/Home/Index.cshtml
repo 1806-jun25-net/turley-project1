@@ -1,12 +1,17 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welcome to Pizza Planet!";
 }
 
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
 <div>
-    Welcome to Pizza Planet! (Make me pretty)
+    Please use the header bar to navigate.
+
+
+    @if (PizzaPlanet.Web.Controllers.UserController.user == null ) {
+    <div>For full features, please <a asp-area= "" asp-controller= "Home" asp-action= "Login" > login </a>!</div>
+            }
 </div>
 
 <div>

@@ -26,7 +26,7 @@ namespace PizzaPlanet.Web.Controllers
         }
 
         // GET: Order/Details/5
-        public async Task<IActionResult> Details(decimal? id)
+        public async Task<IActionResult> Details(decimal? id, bool user)
         {
             if (id == null)
             {
@@ -41,8 +41,8 @@ namespace PizzaPlanet.Web.Controllers
             {
                 return NotFound();
             }
-
-            return View(pizzaOrder);
+            ViewData["Previous"] = user;
+            return View(PizzaPlanet.Library.Mapper.Map(pizzaOrder));
         }
 
         // GET: Order/Create
