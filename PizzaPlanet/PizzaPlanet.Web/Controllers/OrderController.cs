@@ -52,6 +52,26 @@ namespace PizzaPlanet.Web.Controllers
             ViewData["StoreIds"] = await _context.Store.Select(s=>s.Id).ToListAsync();
             return View();
         }
+
+        public async Task<IActionResult> Copy(decimal orderId)
+        {
+            Library.Order tryOrder = PizzaPlanet.Library.Mapper.Map(await _context.PizzaOrder.Where(o => o.Id == orderId).FirstAsync());
+            var orders = await _context.PizzaOrder.Where(o => o.Username == UserController.user.Name).Where(o => o.StoreId== tryOrder.Store.Id).ToListAsync();
+            DateTime lastOrder = DateTime.MinValue;
+            if (orders.Count() > 0)
+                lastOrder = orders.OrderBy(o => DateTime.Now - o.OrderTime).First().OrderTime;
+            var mins = 120 - Math.Ceiling((DateTime.Now - lastOrder).TotalMinutes);
+            if (mins > 0)
+            {
+                string msg = "You have ordered from Store#" + tryOrder.Store.Id+ " too recently. Try again in " + mins + " minutes.";
+                ViewData["Message"] = msg;
+                return View("Message");
+            }
+            tryOrder.Customer = null;
+            order = new PizzaPlanet.Library.Order(tryOrder);
+            order.Customer = UserController.user;
+            return RedirectToAction("Edit");
+        }
         
         public async Task<IActionResult> Create(int id)
         {
@@ -133,40 +153,6 @@ namespace PizzaPlanet.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // GET: Order/Delete/5
-        public async Task<IActionResult> Delete(decimal? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var pizzaOrder = await _context.PizzaOrder
-                .Include(p => p.Store)
-                .Include(p => p.UsernameNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (pizzaOrder == null)
-            {
-                return NotFound();
-            }
-
-            return View(pizzaOrder);
-        }
-
-        // POST: Order/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(decimal id)
-        {
-            var pizzaOrder = await _context.PizzaOrder.FindAsync(id);
-            _context.PizzaOrder.Remove(pizzaOrder);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool PizzaOrderExists(decimal id)
-        {
-            return _context.PizzaOrder.Any(e => e.Id == id);
-        }
+        
     }
 }

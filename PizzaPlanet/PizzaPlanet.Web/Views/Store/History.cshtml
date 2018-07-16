@@ -50,7 +50,8 @@
                     </td>
                     <td>
 
-                        <a asp-controller="Order" asp-action="Details" asp-route-id="@item.Id" , asp-route-user="@false">Details</a>
+                        <a asp-controller="Order" asp-action="Details" asp-route-id="@item.Id" , asp-route-user="@false">Details</a> | @if (PizzaPlanet.Web.Controllers.UserController.user != null)
+                        {<a asp-controller="Order" asp-action="Copy" asp-route-orderId="@item.Id">Copy</a>}
                     </td>
                 </tr>
             }

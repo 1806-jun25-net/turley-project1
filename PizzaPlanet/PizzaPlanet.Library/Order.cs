@@ -49,13 +49,13 @@ namespace PizzaPlanet.Library
         /// <param name="store"></param>
         public Order(User customer, Store store)
         {
-            var LastOrder = customer.LastOrder();
-            //order fails if customer placed too soon
-            if (LastOrder != null)
-            {
-                if (LastOrder.Store.Id == store.Id && (DateTime.Now - LastOrder.Time).TotalMinutes < TimeBetweenOrders)
-                    throw new PizzaTooSoonException("User has ordered from this store too recently.");
-            }
+            //var LastOrder = customer.LastOrder();
+            ////order fails if customer placed too soon
+            //if (LastOrder != null)
+            //{
+            //    if (LastOrder.Store.Id == store.Id && (DateTime.Now - LastOrder.Time).TotalMinutes < TimeBetweenOrders)
+            //        throw new PizzaTooSoonException("User has ordered from this store too recently.");
+            //}
             Store = store;
             Customer = customer;
             Time = DateTime.MinValue;
@@ -71,6 +71,7 @@ namespace PizzaPlanet.Library
         {
             for (int i = 0; i < temp.NumPizza; i++)
                 AddPizza(temp.Pizzas[i]);
+            Id = -1;
         }
 
         /// <summary>

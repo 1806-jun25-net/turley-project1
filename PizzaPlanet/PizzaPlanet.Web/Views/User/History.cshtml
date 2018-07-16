@@ -50,7 +50,8 @@
                     @Html.DisplayFor(modelItem => item.StoreId)
                 </td>
                 <td>
-                    <a asp-controller="Order" asp-action="Details" asp-route-id="@item.Id" asp-route-user="@true">Details</a>
+                    <a asp-controller="Order" asp-action="Details" asp-route-id="@item.Id" asp-route-user="@true">Details</a> |
+                    <a asp-controller="Order" asp-action="Copy" asp-route-orderId="@item.Id">Copy</a>
                 </td>
             </tr>
         }
