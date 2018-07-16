@@ -1,49 +1,92 @@
-﻿@model PizzaPlanet.DBData.PizzaOrder
+﻿@model PizzaPlanet.Library.Order
+@{List<int> stores = (List<int>)ViewData["StoreIds"];}
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Order Details";
 }
 
-<h2>Edit</h2>
+<h2>@ViewData["Title"]</h2>
 
-<h4>PizzaOrder</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="StoreId" class="control-label"></label>
-                <select asp-for="StoreId" class="form-control" asp-items="ViewBag.StoreId"></select>
-                <span asp-validation-for="StoreId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <select asp-for="Username" class="form-control" asp-items="ViewBag.Username"></select>
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrderTime" class="control-label"></label>
-                <input asp-for="OrderTime" class="form-control" />
-                <span asp-validation-for="OrderTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
-                <span asp-validation-for="Total" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
-    </div>
-</div>
+<h4>@Model.Customer.Name's Next Order</h4>
+
+<dl class="dl-horizontal">
+    <dt>
+        Store:
+    </dt>
+    <dd>
+        @Model.Store.Id
+    </dd>
+    <dt>
+        Current Total
+    </dt>
+    <dd>
+        $@Model.Price()
+    </dd>
+</dl>
+
+    <select name="id" form="store">
+        <option value="@Model.Store.Id"></option>
+        @foreach (int s in stores)
+    {
+        @if (s == Model.Store.Id) { continue; }
+        <option value="@s">@s</option>
+    }
+    </select>
+    <form id="store" asp-action="Edit">
+        <button type="submit" value="Change Store" class="btn btn-default">Change Store</button>
+    </form>
+<h3>Pizzas</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Size
+            </th>
+            <th>
+                Crust
+            </th>
+            <th>
+                Sauce
+            </th>
+            <th>
+                Cheese
+            </th>
+            <th>Toppings</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(var i=0;i<Model.NumPizza;i++)
+                {
+        <tr>
+            <td>
+                @Model.Pizzas[i].Size.ToString()
+            </td>
+            <td>
+                @Model.Pizzas[i].Crust.ToString()
+            </td>
+            <td>
+                @Model.Pizzas[i].Toppings[0].ToString()
+            </td>
+            <td>
+                @Model.Pizzas[i].Toppings[1].ToString()
+            </td>
+            <td>
+                @{var tops = Model.Pizzas[i].ToppingsString();}
+                @if (tops != "")
+                    {
+                @tops
+                    }
+            </td>
+            <td>
+                <a asp-action="DeletePizza" asp-route-i="@i">Remove Pizza</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Order" asp-action="EditPizza">Add Pizza</a>|
+    <a asp-controller="Order" asp-action="Submit">Submit Order</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

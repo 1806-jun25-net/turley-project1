@@ -12,6 +12,7 @@ namespace PizzaPlanet.Web.Controllers
     public class OrderController : Controller
     {
         private readonly Project1PizzaPlanetContext _context;
+        public static PizzaPlanet.Library.Order order = null;
 
         public OrderController(Project1PizzaPlanetContext context)
         {
@@ -46,85 +47,56 @@ namespace PizzaPlanet.Web.Controllers
         }
 
         // GET: Order/Create
-        public IActionResult Create()
+        public async Task<IActionResult> New()
         {
-            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Id");
-            ViewData["Username"] = new SelectList(_context.PizzaUser, "Username", "Username");
+            ViewData["StoreIds"] = await _context.Store.Select(s=>s.Id).ToListAsync();
             return View();
         }
-
-        // POST: Order/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StoreId,Username,OrderTime,Total")] PizzaOrder pizzaOrder)
+        
+        public async Task<IActionResult> Create(int id)
         {
-            if (ModelState.IsValid)
+            var orders = await _context.PizzaOrder.Where(o => o.Username == UserController.user.Name).Where(o =>o.StoreId==id).ToListAsync();
+            DateTime lastOrder = DateTime.MinValue;
+            if (orders.Count() > 0)
+                lastOrder = orders.OrderBy(o => DateTime.Now - o.OrderTime).First().OrderTime;
+            var mins = Math.Ceiling((DateTime.Now - lastOrder).TotalMinutes);
+            if (mins < 120)
             {
-                _context.Add(pizzaOrder);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewData["Message"] = "You have ordered from store " + id + " too recently.\r\nTry again in " + mins + " minutes.";
+                return RedirectToAction("Index","Home");
             }
-            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Id", pizzaOrder.StoreId);
-            ViewData["Username"] = new SelectList(_context.PizzaUser, "Username", "Username", pizzaOrder.Username);
-            return View(pizzaOrder);
+            order = new PizzaPlanet.Library.Order(UserController.user, PizzaPlanet.Library.Mapper.Map(await _context.Store.Where(s => s.Id == id).SingleAsync()));
+            return RedirectToAction("Edit");
         }
 
         // GET: Order/Edit/5
-        public async Task<IActionResult> Edit(decimal? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var pizzaOrder = await _context.PizzaOrder.FindAsync(id);
-            if (pizzaOrder == null)
-            {
-                return NotFound();
-            }
-            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Id", pizzaOrder.StoreId);
-            ViewData["Username"] = new SelectList(_context.PizzaUser, "Username", "Username", pizzaOrder.Username);
-            return View(pizzaOrder);
+            if (id != null)
+                order.Store = PizzaPlanet.Library.Store.GetStore((int)id);
+            ViewData["StoreIds"] = await _context.Store.Select(s => s.Id).ToListAsync();
+            return View(order);
         }
 
-        // POST: Order/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        public IActionResult EditPizza()
+        {
+            return View(new Library.Pizza());
+        }
+
+        public IActionResult DeletePizza(int i)
+        {
+            order.RemovePizza(i);
+            return RedirectToAction("Edit");
+
+        }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("Id,StoreId,Username,OrderTime,Total")] PizzaOrder pizzaOrder)
+        public IActionResult CompletePizza(Library.Pizza pizza)
         {
-            if (id != pizzaOrder.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(pizzaOrder);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PizzaOrderExists(pizzaOrder.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Id", pizzaOrder.StoreId);
-            ViewData["Username"] = new SelectList(_context.PizzaUser, "Username", "Username", pizzaOrder.Username);
-            return View(pizzaOrder);
+            order.AddPizza(pizza);
+            return RedirectToAction("Edit");
         }
+
 
         // GET: Order/Delete/5
         public async Task<IActionResult> Delete(decimal? id)

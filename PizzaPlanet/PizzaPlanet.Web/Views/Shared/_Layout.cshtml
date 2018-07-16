@@ -1,5 +1,6 @@
 ﻿@using PizzaPlanet.Web;
-@{ var user = PizzaPlanet.Web.Controllers.UserController.user;}
+@{ var user = PizzaPlanet.Web.Controllers.UserController.user;
+    var order =  PizzaPlanet.Web.Controllers.OrderController.order; }
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,9 +35,23 @@
                 <ul class="nav navbar-nav">
                     <li>
                         <div class="headbtn">
-                            <a asp-area="" asp-controller="Order" asp-action="Create">Order Pizza</a>
+                            <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </div>
                     </li>
+                    @if(user!= null) {
+                    <li>
+                        <div class="headbtn">
+                            @if (order != null)
+                            {
+                                <a asp-area="" asp-controller="Order" asp-action="Edit">Edit Order</a>
+                            }
+                            else
+                            {
+                                <a asp-area="" asp-controller="Order" asp-action="New">New Order</a>
+                            }
+                        </div>
+                    </li>
+                    }
                     <li>
                         <div class="dropdown">
                             <button class="headbtn">View Order History</button>

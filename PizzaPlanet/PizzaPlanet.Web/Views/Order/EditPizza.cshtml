@@ -1,0 +1,50 @@
+﻿@model PizzaPlanet.Library.Pizza
+
+@{
+    ViewData["Title"] = "New Pizza";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h4>Customize your pizza:</h4>
+<hr />
+<form method="post" asp-action="CompletePizza">
+    <table class="table">
+        <tr class="form-group">
+            <td> Size:</td>
+            <td><input asp-for="Size" type="radio" value="@PizzaPlanet.Library.Pizza.SizeType.Small"> Small</td>
+            <td>
+                <input asp-for="Size" type="radio" value="@PizzaPlanet.Library.Pizza.SizeType.Medium"> Medium
+            </td>
+            <td><input asp-for="Size" type="radio" value="@PizzaPlanet.Library.Pizza.SizeType.Large"> Large</td>
+        </tr>
+        <tr class="form-group">
+            <td> Crust:</td>
+            <td>
+                <input asp-for="Crust" type="radio" value="@PizzaPlanet.Library.Pizza.CrustType.Hand_Tossed"> Hand Tossed
+            </td>
+            <td>
+                <input asp-for="Crust" type="radio" value="@PizzaPlanet.Library.Pizza.CrustType.Pan"> Pan
+            </td>
+            <td>  <input asp-for="Crust" type="radio" value="@PizzaPlanet.Library.Pizza.CrustType.Thin"> Thin</td>
+        </tr>
+        @for (int i = 0; i < 11; i++)
+        {
+            <tr class="form-group">
+                <td> @PizzaPlanet.Library.Pizza.ToppingTypes[i]:</td>
+                <td>
+                    <input asp-for="Toppings[i]" type="radio" value="@PizzaPlanet.Library.Pizza.Amount.No"> No
+                </td>
+                <td>
+                    <input asp-for="Toppings[i]" type="radio" value="@PizzaPlanet.Library.Pizza.Amount.Light"> Light
+                </td>
+                <td>
+                    <input asp-for="Toppings[i]" type="radio" value="@PizzaPlanet.Library.Pizza.Amount.Regular"> Regular
+                </td>
+                <td>  <input asp-for="Toppings[i]" type="radio" value="@PizzaPlanet.Library.Pizza.Amount.Extra"> Extra</td>
+            </tr>
+        }
+    </table>
+    <input type="submit" value="Complete Pizza" class="btn btn-default" />
+</form>
+

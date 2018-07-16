@@ -12,9 +12,7 @@ namespace PizzaPlanet.Library
 
         public static IEnumerable<Store> Stores()
         {
-            if (StoresReal == null)
-                StoresReal = PizzaRepository.Repo().GetStores();
-            return StoresReal;
+            return PizzaRepository.Repo().GetStores();
         }
 
         public static Store GetStore(int id)

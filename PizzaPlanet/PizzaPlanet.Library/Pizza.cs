@@ -41,7 +41,7 @@ namespace PizzaPlanet.Library
 
         public SizeType Size { get; set; }
         public CrustType Crust { get; set; }
-        public Amount[] Toppings { get; }
+        public Amount[] Toppings { get; set; } = new Amount[ToppingTypes.Length];
 
         /// <summary>
         /// New Pizza with no toppings, Regular sauce/cheese and large size are default.
@@ -81,6 +81,21 @@ namespace PizzaPlanet.Library
                 c /= 4;
             }
         }
+        //Base pizza
+        public Pizza()
+        {
+            Size = SizeType.Large;
+            Crust = CrustType.Hand_Tossed;
+            Toppings = new Amount[ToppingTypes.Length];
+            Toppings[(int)ToppingType.Cheese] = Amount.Regular;
+            Toppings[(int)ToppingType.Sauce] = Amount.Regular;
+            for(int i = 2; i < ToppingTypes.Length; i++)
+            {
+                Toppings[i] = Amount.No;
+            }
+
+        }
+
 
         /// <summary>
         /// Adds topping to pizza. Regular amount unless modified
