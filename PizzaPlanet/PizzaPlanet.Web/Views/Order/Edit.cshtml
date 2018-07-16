@@ -87,6 +87,7 @@
 </table>
 
 <div>
-    <a asp-controller="Order" asp-action="EditPizza">Add Pizza</a>|
-    <a asp-controller="Order" asp-action="Submit">Submit Order</a>
+    @if(Model.NumPizza>0){<a asp-controller="Order" asp-action="Submit">Submit Order | </a>}
+    @if(Model.NumPizza<12){<a asp-controller="Order" asp-action="EditPizza">Add Pizza | </a> }
+    @if(Model.NumPizza>0){<a asp-controller="Order" asp-action="Delete">Cancel Order</a>}
 </div>

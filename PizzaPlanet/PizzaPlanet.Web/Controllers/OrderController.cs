@@ -99,8 +99,8 @@ namespace PizzaPlanet.Web.Controllers
 
         public IActionResult Submit()
         {
-            order.Store.PlaceOrder(order);
-            PizzaPlanet.Library.PizzaRepository.Repo().PlaceOrder(order);
+            if(order.Store.PlaceOrder(order))
+                PizzaPlanet.Library.PizzaRepository.Repo().PlaceOrder(order);
             ViewData["Message"] = "Order " + order.IdFull() + " successfully placed!";
             order = null;
             return RedirectToAction("Index", "Home");
