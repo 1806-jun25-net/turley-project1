@@ -33,7 +33,7 @@ namespace PizzaPlanet.Web.Controllers
                 PizzaPlanet.Web.Controllers.UserController.user = tryUser;
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Message"] = "User does not yet exist.";
+            ViewData["Message"] = "User <"+pizzaUser.Username+"> does not yet exist.";
             return View();
         }
 
@@ -46,13 +46,18 @@ namespace PizzaPlanet.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult NewUser([Bind("Username,StoreId")] PizzaUser pizzaUser)
         {
+            if (pizzaUser.Username.Length < 4)
+            {
+                ViewData["Message"] = "Username must be at least 4 characters long.";
+                return View();
+            }
             var tryUser = PizzaPlanet.Library.User.TryUser(pizzaUser.Username);
             if (tryUser == null)
             {
                 PizzaPlanet.Web.Controllers.UserController.user = PizzaPlanet.Library.User.MakeUser(pizzaUser.Username);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Message"] = "Username <" + pizzaUser.Username + "> already exists";
+            ViewData["Message"] = "User <" + pizzaUser.Username + "> already exists";
             return View();
         }
 

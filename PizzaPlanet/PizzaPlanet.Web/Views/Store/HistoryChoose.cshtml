@@ -10,7 +10,7 @@
     @foreach (var item in Model)
     {
             <dt>
-                @Html.DisplayFor(modelItem => item.Id)
+                Store# @Html.DisplayFor(modelItem => item.Id):
             </dt>
             <dd>
                 <a asp-controller="Store" asp-action="History" asp-route-id="@item.Id">View History</a>
