@@ -34,6 +34,9 @@
     <Content Update="Views\Order\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Shared\Message.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\User\History.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

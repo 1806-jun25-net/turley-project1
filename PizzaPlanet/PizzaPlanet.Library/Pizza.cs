@@ -229,7 +229,7 @@ namespace PizzaPlanet.Library
                 next += ToppingTypes[i];
                 ret += next;
             }
-
+            if (ret == "") ret = "<None>";
             return ret;
         }
 

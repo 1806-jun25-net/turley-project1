@@ -12,8 +12,9 @@ namespace PizzaPlanet.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(string message)
         {
+            ViewData["Message"] = message;
             return View();
         }
         
@@ -50,7 +51,7 @@ namespace PizzaPlanet.Web.Controllers
                 PizzaPlanet.Web.Controllers.UserController.user = PizzaPlanet.Library.User.MakeUser(pizzaUser.Username);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Message"] = "Username <" + pizzaUser.Username + "> already exists!";
+            ViewData["Message"] = "Username <" + pizzaUser.Username + "> already exists";
             return View();
         }
 
@@ -59,12 +60,14 @@ namespace PizzaPlanet.Web.Controllers
 
         public IActionResult Logout()
         {
+            string msg = "";
             if (UserController.user != null)
             {
-                ViewData["Message"] = "<" + UserController.user.Name + "> is now logged out!";
+                msg = "<" + UserController.user.Name + "> is now logged out";
+                ViewData["Message"] = msg;
                 UserController.user = null;
             }
-            return RedirectToAction(nameof(Login));
+            return View("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

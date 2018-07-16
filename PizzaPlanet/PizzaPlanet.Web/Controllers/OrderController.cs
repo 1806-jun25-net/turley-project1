@@ -59,11 +59,12 @@ namespace PizzaPlanet.Web.Controllers
             DateTime lastOrder = DateTime.MinValue;
             if (orders.Count() > 0)
                 lastOrder = orders.OrderBy(o => DateTime.Now - o.OrderTime).First().OrderTime;
-            var mins = Math.Ceiling((DateTime.Now - lastOrder).TotalMinutes);
-            if (mins < 120)
+            var mins = 120 - Math.Ceiling((DateTime.Now - lastOrder).TotalMinutes);
+            if (mins > 0)
             {
-                ViewData["Message"] = "You have ordered from store " + id + " too recently.\r\nTry again in " + mins + " minutes.";
-                return RedirectToAction("Index","Home");
+                string msg  = "You have ordered from Store#"+ id + " too recently. Try again in " + mins + " minutes.";
+                ViewData["Message"] = msg;
+                return View("Message");
             }
             order = new PizzaPlanet.Library.Order(UserController.user, PizzaPlanet.Library.Mapper.Map(await _context.Store.Where(s => s.Id == id).SingleAsync()));
             return RedirectToAction("Edit");
@@ -72,8 +73,21 @@ namespace PizzaPlanet.Web.Controllers
         // GET: Order/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id != null)
-                order.Store = PizzaPlanet.Library.Store.GetStore((int)id);
+            if (id != null && id != order.Id) {
+                var orders = await _context.PizzaOrder.Where(o => o.Username == UserController.user.Name).Where(o => o.StoreId == id).ToListAsync();
+                DateTime lastOrder = DateTime.MinValue;
+                if (orders.Count() > 0)
+                    lastOrder = orders.OrderBy(o => DateTime.Now - o.OrderTime).First().OrderTime;
+                var mins = 120 - Math.Ceiling((DateTime.Now - lastOrder).TotalMinutes);
+                if (mins > 0)
+                {
+                    ViewData["Message"] = "You have ordered from Store#" + id + " too recently. Try again in " + mins + " minutes.";
+                }
+                else
+                {
+                    order.Store = PizzaPlanet.Library.Store.GetStore((int)id);
+                }
+            }
             ViewData["StoreIds"] = await _context.Store.Select(s => s.Id).ToListAsync();
             return View(order);
         }
@@ -99,13 +113,25 @@ namespace PizzaPlanet.Web.Controllers
 
         public IActionResult Submit()
         {
-            if(order.Store.PlaceOrder(order))
+            if (order.Store.PlaceOrder(order))
+            {
                 PizzaPlanet.Library.PizzaRepository.Repo().PlaceOrder(order);
-            ViewData["Message"] = "Order " + order.IdFull() + " successfully placed!";
+                string msg = "Order " + order.IdFull() + " successfully placed!";
+                ViewData["Message"] = msg;
+            }
+            else
+            {
+                ViewData["Message"] = "There was an error in placing your order. Please call Store#" + order.Store.Id + " for details.";
+            }
+            order = null;
+            return View("Message");
+        }
+
+        public IActionResult Delete()
+        {
             order = null;
             return RedirectToAction("Index", "Home");
         }
-
 
         // GET: Order/Delete/5
         public async Task<IActionResult> Delete(decimal? id)
