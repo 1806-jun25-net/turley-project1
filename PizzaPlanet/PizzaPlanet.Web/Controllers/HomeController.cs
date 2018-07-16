@@ -33,6 +33,7 @@ namespace PizzaPlanet.Web.Controllers
                 PizzaPlanet.Web.Controllers.UserController.user = tryUser;
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["Message"] = "User does not yet exist.";
             return View();
         }
 
