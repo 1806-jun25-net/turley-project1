@@ -97,6 +97,15 @@ namespace PizzaPlanet.Web.Controllers
             return RedirectToAction("Edit");
         }
 
+        public IActionResult Submit()
+        {
+            order.Store.PlaceOrder(order);
+            PizzaPlanet.Library.PizzaRepository.Repo().PlaceOrder(order);
+            ViewData["Message"] = "Order " + order.IdFull() + " successfully placed!";
+            order = null;
+            return RedirectToAction("Index", "Home");
+        }
+
 
         // GET: Order/Delete/5
         public async Task<IActionResult> Delete(decimal? id)
