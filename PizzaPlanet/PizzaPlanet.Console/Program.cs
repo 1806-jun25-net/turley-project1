@@ -11,7 +11,7 @@ namespace PizzaPlanet.Application
         static void Main(string[] args)
         {
             //starts console app
-            Console.StartScreen();
+            /*Console.StartScreen();*/
         }
     }
 }
