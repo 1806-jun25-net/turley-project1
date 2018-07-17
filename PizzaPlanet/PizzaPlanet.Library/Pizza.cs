@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace PizzaPlanet.Library
@@ -12,10 +13,10 @@ namespace PizzaPlanet.Library
         public enum SizeType { Small=2, Medium, Large}
         public enum Amount { No, Light, Regular, Extra}
 
-        public static readonly string[] Sizes = Enum.GetNames(typeof(SizeType));
-        public static readonly string[] CrustTypes = Enum.GetNames(typeof(CrustType));
-        public static readonly string[] ToppingTypes = Enum.GetNames(typeof(ToppingType));
-        public static readonly string[] Amounts = Enum.GetNames(typeof(Amount));
+        public static readonly ReadOnlyCollection<string> Sizes = new ReadOnlyCollection<string>(Enum.GetNames(typeof(SizeType)));
+        public static readonly ReadOnlyCollection<string> CrustTypes = new ReadOnlyCollection<string>(Enum.GetNames(typeof(CrustType)));
+        public static readonly ReadOnlyCollection<string> ToppingTypes = new ReadOnlyCollection<string>(Enum.GetNames(typeof(ToppingType)));
+        public static readonly ReadOnlyCollection<string> Amounts = new ReadOnlyCollection<string>(Enum.GetNames(typeof(Amount)));
 
         /// <summary>
         /// Transforms Amount enum to usable double modifier.
@@ -41,7 +42,7 @@ namespace PizzaPlanet.Library
 
         public SizeType Size { get; set; }
         public CrustType Crust { get; set; }
-        public Amount[] Toppings { get; set; } = new Amount[ToppingTypes.Length];
+        public Amount[] Toppings { get; set; } = new Amount[ToppingTypes.Count];
 
         /// <summary>
         /// New Pizza with no toppings, Regular sauce/cheese and large size are default.
@@ -58,7 +59,7 @@ namespace PizzaPlanet.Library
         {
             Size = size;
             Crust = crust;
-            Toppings = new Amount[ToppingTypes.Length];
+            Toppings = new Amount[ToppingTypes.Count];
             Toppings[(int)ToppingType.Cheese] = cheese;
             Toppings[(int)ToppingType.Sauce] = sauce;
         }
@@ -73,7 +74,7 @@ namespace PizzaPlanet.Library
             c /= 4;
             Crust = (CrustType)(c % 4);
             c /= 4;
-            Toppings = new Amount[ToppingTypes.Length]; 
+            Toppings = new Amount[ToppingTypes.Count]; 
             for(int i = 0;i<Toppings.Length; i++)
             {
                 if (c == 0) { break; }
@@ -86,10 +87,10 @@ namespace PizzaPlanet.Library
         {
             Size = SizeType.Large;
             Crust = CrustType.Hand_Tossed;
-            Toppings = new Amount[ToppingTypes.Length];
+            Toppings = new Amount[ToppingTypes.Count];
             Toppings[(int)ToppingType.Cheese] = Amount.Regular;
             Toppings[(int)ToppingType.Sauce] = Amount.Regular;
-            for(int i = 2; i < ToppingTypes.Length; i++)
+            for(int i = 2; i < ToppingTypes.Count; i++)
             {
                 Toppings[i] = Amount.No;
             }

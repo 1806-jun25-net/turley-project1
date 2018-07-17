@@ -62,7 +62,7 @@ namespace PizzaPlanet.Library
         /// <summary>
         /// Inventory of each topping.
         /// </summary>
-        internal decimal[] Toppings = new decimal[Pizza.ToppingTypes.Length];
+        internal decimal[] Toppings = new decimal[Pizza.ToppingTypes.Count];
 
         /// <summary>
         /// Inventory of Dough

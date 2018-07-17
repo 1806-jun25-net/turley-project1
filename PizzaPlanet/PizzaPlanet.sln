@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzaPlanet.DBData", "Pizza
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzaPlanet.Testing", "PizzaPlanet.Testing\PizzaPlanet.Testing.csproj", "{A266475B-3B13-453F-86EF-8FE87F5997BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaPlanet.Web", "PizzaPlanet.Web\PizzaPlanet.Web.csproj", "{1B82D6DE-DBF1-4850-9F20-5CD57C0B740C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PizzaPlanet.Web", "PizzaPlanet.Web\PizzaPlanet.Web.csproj", "{1B82D6DE-DBF1-4850-9F20-5CD57C0B740C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2F101547-8656-4BAC-A258-2C5666BC723B} = {2F101547-8656-4BAC-A258-2C5666BC723B}
 	EndProjectSection
@@ -27,7 +27,6 @@ Global
 		{CC0C74E6-3F76-49AA-836D-E8E6893E8EDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC0C74E6-3F76-49AA-836D-E8E6893E8EDF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6EE423BC-1422-4D76-A49F-2252DCAFB695}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EE423BC-1422-4D76-A49F-2252DCAFB695}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EE423BC-1422-4D76-A49F-2252DCAFB695}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EE423BC-1422-4D76-A49F-2252DCAFB695}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2F101547-8656-4BAC-A258-2C5666BC723B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
