@@ -128,8 +128,7 @@ namespace PizzaPlanet.Library
         {
             if (OrdersReal == null)
                 Orders();
-            OrdersReal = OrdersReal.Concat(new[] { order });
-            OrdersReal.OrderBy(o => o.Time);
+            OrdersReal = OrdersReal.Concat(new[] { order }).OrderBy(o => o.Time);
         }
     }
 }

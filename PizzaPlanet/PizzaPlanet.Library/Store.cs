@@ -90,8 +90,7 @@ namespace PizzaPlanet.Library
         {
             if (OrdersReal == null)
                 Orders();
-            OrdersReal = OrdersReal.Concat(new[] { order });
-            OrdersReal.OrderBy(o => o.Time);
+            OrdersReal = OrdersReal.Concat(new[] { order }).OrderBy(o=>o.Time);
         }
 
         /// <summary>
@@ -128,8 +127,8 @@ namespace PizzaPlanet.Library
         /// <param name="o"></param>
         public bool PlaceOrder(Order o)
         {
-            //Possible todo: return failing ingredient rather than false
-            //Possible todo: change "check" to its own method
+            //Possible: return failing ingredient rather than false
+            //Possible: change "check" to its own method
 
             //Calculates total dough, toppings required for order
             decimal dough = 0;
