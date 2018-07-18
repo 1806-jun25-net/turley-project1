@@ -17,18 +17,6 @@ namespace PizzaPlanet.Testing
             user = new User("test");
             TestLoc.FullInventory();
         }
-    
-        // requires repo
-        //[Fact]
-        //public void OrderIdFullTest()
-        //{
-        //    SetUp();
-        //    Order o = new Order(user,TestLoc,DateTime.Now,0);
-        //    o.AddPizza(new Pizza(LargeHandCheese));
-        //    TestLoc.PlaceOrder(o);
-        //    Assert.Equal(1, o.Id);
-        //    Assert.Equal(1.100M, o.IdFull());
-        //}
 
         [Fact]
         public void AddRemoveNumPizzaTest()

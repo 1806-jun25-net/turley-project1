@@ -49,13 +49,6 @@ namespace PizzaPlanet.Library
         /// <param name="store"></param>
         public Order(User customer, Store store)
         {
-            //var LastOrder = customer.LastOrder();
-            ////order fails if customer placed too soon
-            //if (LastOrder != null)
-            //{
-            //    if (LastOrder.Store.Id == store.Id && (DateTime.Now - LastOrder.Time).TotalMinutes < TimeBetweenOrders)
-            //        throw new PizzaTooSoonException("User has ordered from this store too recently.");
-            //}
             Store = store;
             Customer = customer;
             Time = DateTime.MinValue;
@@ -98,7 +91,7 @@ namespace PizzaPlanet.Library
         /// <param name="p"></param>
         public bool AddPizza(Pizza p)
         {
-            //possible todo: add cause of failure to false
+            //possible: add cause of failure to false
             if (NumPizza == MaxPizzas || (Price() + p.Price()) > MaxPrice)
                 return false;
             Pizzas[NumPizza] = p;
@@ -108,7 +101,7 @@ namespace PizzaPlanet.Library
 
         public bool RemovePizza(int p)
         {
-            //possible todo, better restriction/permissions here
+            //possible, better restriction/permissions here
             if (Pizzas[p] == null)
                 return false;
             for(int i = p + 1; i < NumPizza; i++)
@@ -129,7 +122,7 @@ namespace PizzaPlanet.Library
         /// <returns></returns>
         public decimal Price()
         {
-            //possible todo: change calculation to "as-we-go"
+            //possible: change calculation to "as-we-go"
             decimal totalPrice = 0.0M;
             for(int i =0;i<NumPizza;i++)
                 totalPrice += Pizzas[i].Price();

@@ -42,7 +42,7 @@ namespace PizzaPlanet.Library
 
         public SizeType Size { get; set; }
         public CrustType Crust { get; set; }
-        public Amount[] Toppings { get; set; } = new Amount[ToppingTypes.Count];
+        public Amount[] Toppings { get; set; }
 
         /// <summary>
         /// New Pizza with no toppings, Regular sauce/cheese and large size are default.
@@ -165,10 +165,10 @@ namespace PizzaPlanet.Library
         /// </summary>
         public decimal Price()
         {
-            //possible todo: change calculation to "as-we-go"
+            //possible: change calculation to "as-we-go"
             //Note base prices used here. Should be made static defaults if displayed to user.
 
-            decimal price = 0.0M;
+            decimal price;
             switch (Size)
             {
                 case SizeType.Small:
@@ -233,14 +233,7 @@ namespace PizzaPlanet.Library
             if (ret == "") ret = "<None>";
             return ret;
         }
-
-        //public override bool Equals(object obj)
-        //{
-        //    if (obj.GetType() == typeof(Pizza))
-        //        return ((Pizza)obj).ToInt() == this.ToInt();
-        //    else
-        //        return false;
-        //}
+        
 
     }
 }

@@ -25,12 +25,6 @@ namespace PizzaPlanet.Library
             }
             return UsersReal;
         }
-
-        //old xml version 
-        public static void LoadUsersOld()
-        {
-            
-        }
         
         /// <summary>
         /// Attempts to find user by name. If user exists, returns that user. else null
@@ -94,7 +88,7 @@ namespace PizzaPlanet.Library
         public User(string name)
         {
             if (name.Length < 4)
-                throw new ArgumentOutOfRangeException("Username too short.");
+                throw new ArgumentOutOfRangeException("name","Username too short.");
             Name = name;
             DefLocation = null;
             OrdersReal = null;
